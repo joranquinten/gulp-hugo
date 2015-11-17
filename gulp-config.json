@@ -1,0 +1,59 @@
+{
+    "isDevelop": true,
+    "env": {
+        "dev": {
+            "base": "./src/",
+            "dest": "./dev/"
+        },
+        "prod": {
+            "base": "./src/",
+            "dest": "./prod/"
+        }
+    },
+    "sourceFiles": {
+        "jsCritical": [
+            "js/vendor/modernizr.js"
+        ],
+        "js": [
+            "!js/vendor/modernizr.js",
+            "js/vendor/**/.*.js",
+            "js/plugins/**/*.js",
+            "js/app.js"
+        ],
+        "scss": [
+            "scss/**/*.s+(a|c)ss"
+        ],
+        "css": [
+            "css/**/*.css"
+        ],
+        "html": [
+            "*.{html,htm,xml,txt}"
+        ],
+        "images": [
+            "img/**/*.{gif,png,jpeg,jpg,svg}"
+        ]
+    },
+    "watchFiles": {
+        "scss": "scss/**/*.s+(a|c)ss",
+        "css": "css/*.css",
+        "js": "js/**/*.js",
+        "html": "*.{html,htm,xml,txt}"
+    },
+    "plugins": {
+        "scssLint" : {
+          "config": "lint-scss.yml"
+        },
+        "minifyCSS": {
+            "compatibility": "ie8"
+        },
+        "minifyHTML": {
+            "collapseWhitespace": true
+        },
+        "browserSync": {
+            "browsers": [
+                "chrome",
+                "iexplore"
+            ]
+        }
+    }
+}
