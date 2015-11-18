@@ -1,13 +1,3 @@
-/*
-gulp-autoprefixer -> or postCSS?
-gulp-babel -> transpile?
-gulp-gzip -> compress
-gulp-postcss -> prefix
-gulp-prompt -> dev/prod?
-gulp-rename -> minify
-gulp-beautify -> dev?
-*/
-
 require('es6-promise').polyfill();
 var config = require('./gulp-config.json');
 var gulp = require('gulp');
@@ -17,6 +7,12 @@ var pngquant = require('imagemin-pngquant');
 var gulpif = require('gulp-if');
 var browserSync = require("browser-sync").create();
 var reload = browserSync.reload;
+
+// PostCSS Plugins
+var autoprefixer = require('autoprefixer');
+var cssgrace = require('cssgrace');
+var pseudoelements = require('postcss-pseudoelements');
+var cssnano = require('cssnano');
 
 // Assuming default means develop
 gulp.task('default', function() {
@@ -72,15 +68,24 @@ var path = config.env.dev;
 var base = path.base, ref = config.sourceFiles.scss;
 if (!config.isDevelop) path = config.env.prod;
 
+var processors = [
+  autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
+  require('cssgrace'),
+  pseudoelements
+];
+
+if (!config.isDevelop) {
+  processors.push( cssnano({discardComments: {removeAll: true}}) );
+}
+
   return gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('**/styles.s+(a|c)ss'))
     .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
     .pipe(plugins.scssLint(config.plugins.scssLint))
     .pipe(plugins.sass())
     .pipe(plugins.concat('styles.css'))
-    .pipe(gulpif(!config.isDevelop, plugins.minifyCss( config.plugins.minifyCSS )))
+    .pipe(plugins.postcss(processors)) // ♤ PostCSS ♤
     .pipe(gulp.dest(path.dest + 'css/'))
-    // ♤ Insert PostCSS here? ♤
     .pipe(reload({stream: true}));
 });
 
@@ -131,6 +136,7 @@ gulp.task('watch', function(){
   gulp.watch(base+''+config.watchFiles.scss, ['css']);
   gulp.watch(base+''+config.watchFiles.js, ['js']);
   gulp.watch(base+''+config.watchFiles.html, ['html']);
+  gulp.watch(base+''+config.watchFiles.images, ['img']);
 });
 
 /* Other helpers */

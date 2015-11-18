@@ -37,7 +37,8 @@
         "scss": "scss/**/*.s+(a|c)ss",
         "css": "css/*.css",
         "js": "js/**/*.js",
-        "html": "*.{html,htm,xml,txt}"
+        "html": "*.{html,htm,xml,txt}",
+        "images": "img/**/*.{gif,png,jpeg,jpg,svg}"
     },
     "plugins": {
         "scssLint" : {
