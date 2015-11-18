@@ -1,20 +1,18 @@
-Startangular
+Gulp-boilerplate
 =======
 
-### Interactive startpage using Gufobo2 and Angular
+### Barebones, standardized boilerplate
 
-This repo builds you a, fully responsive, customisable startpage.
+Config should be done in the gulp-config.json
 
 ### Todo:
 
-* Adding and editing links
-* Adding and editing of groups
-* Sorting links within groups
-* Sorting groups within page
-* Moving links to a new group
-* Adding icons to links
-* MySQL install instructions
+* Implement PostCSS
+* Implement gzip
+* Branch to Angular purpose and:
+  * [Implement Unit testing](https://docs.angularjs.org/guide/unit-testing)
+  * [Implement End-to-end testing](https://angular.github.io/protractor/#/)
 
 ---
 
-Auteur: Joran Quinten
+Author: Joran Quinten
