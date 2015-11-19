@@ -1,3 +1,8 @@
+
+/* **************************************************
+*  Load plugins                                     *
+************************************************** */
+
 require('es6-promise').polyfill();
 var config = require('./gulp-config.json');
 var gulp = require('gulp');
@@ -7,6 +12,7 @@ var pngquant = require('imagemin-pngquant');
 var gulpif = require('gulp-if');
 var browserSync = require("browser-sync").create();
 var reload = browserSync.reload;
+var protractor = require("gulp-protractor").protractor;
 
 // PostCSS Plugins
 var autoprefixer = require('autoprefixer');
@@ -14,7 +20,10 @@ var cssgrace = require('cssgrace');
 var pseudoelements = require('postcss-pseudoelements');
 var cssnano = require('cssnano');
 
-// Assuming default means develop
+/* **************************************************
+*  Main tasks                                       *
+************************************************** */
+
 gulp.task('default', function() {
   runSequence('dev');
 });
@@ -23,14 +32,16 @@ gulp.task('dev', function(){
   config.isDevelop = true;
   runSequence(['js','css','html','img'],'serve','watch');
 });
+
 gulp.task('prod', function(){
   config.isDevelop = false;
   runSequence(['js','css','html','img'],'serve','watch');
 });
 
-/*
-Tasks by type
-*/
+/* **************************************************
+*  Tasks by type                                    *
+************************************************** */
+
 gulp.task('js',function(){
 
   var path = config.env.dev;
@@ -64,19 +75,19 @@ gulp.task('js',function(){
 
 gulp.task('css', function(){
 
-var path = config.env.dev;
-var base = path.base, ref = config.sourceFiles.scss;
-if (!config.isDevelop) path = config.env.prod;
+  var path = config.env.dev;
+  var base = path.base, ref = config.sourceFiles.scss;
+  if (!config.isDevelop) path = config.env.prod;
 
-var processors = [
-  autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
-  require('cssgrace'),
-  pseudoelements
-];
+  var processors = [
+    autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
+    require('cssgrace'),
+    pseudoelements
+  ];
 
-if (!config.isDevelop) {
-  processors.push( cssnano({discardComments: {removeAll: true}}) );
-}
+  if (!config.isDevelop) {
+    processors.push( cssnano({discardComments: {removeAll: true}}) );
+  }
 
   return gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('**/styles.s+(a|c)ss'))
@@ -87,6 +98,7 @@ if (!config.isDevelop) {
     .pipe(plugins.postcss(processors)) // ♤ PostCSS ♤
     .pipe(gulp.dest(path.dest + 'css/'))
     .pipe(reload({stream: true}));
+
 });
 
 gulp.task('html', function(){
@@ -120,9 +132,10 @@ gulp.task('img', function(){
 
 });
 
-/*
-Utilities
-*/
+/* **************************************************
+*  Utilities                                        *
+************************************************** */
+
 gulp.task('serve', function(){
   var env = 'dev';
   if (!config.isDevelop) env = 'prod';
@@ -139,7 +152,10 @@ gulp.task('watch', function(){
   gulp.watch(base+''+config.watchFiles.images, ['img']);
 });
 
-/* Other helpers */
+/* **************************************************
+*  Other helpers                                    *
+************************************************** */
+
 function currentDir(){
   if (__dirname) return __dirname.split('\\').pop();
 }

@@ -23,6 +23,7 @@
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.0.1",
     "gulp-postcss": "^6.0.1",
+    "gulp-protractor": "^1.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.1.0",
     "gulp-scss-lint": "^0.3.8",
@@ -33,5 +34,7 @@
     "jshint-stylish": "^2.1.0",
     "postcss-pseudoelements": "^3.0.0",
     "run-sequence": "^1.1.4"
-  }
+  },
+
+  "license": "MIT"
 }

@@ -3,7 +3,7 @@ Gulp-boilerplate
 
 ### Barebones, standardized boilerplate
 
-Config should be done in the gulp-config.json
+Config should be done in the gulp-config.json.
 
 =======
 

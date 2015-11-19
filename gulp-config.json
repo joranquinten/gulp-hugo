@@ -55,6 +55,10 @@
                 "chrome",
                 "iexplore"
             ]
+        },
+        "protractor" : {
+          "configFile" : "src/tests/protractor.config.js",
+          "args": ["--baseUrl", "http://127.0.0.1:8000"]
         }
     }
 }
