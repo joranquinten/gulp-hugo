@@ -12,9 +12,12 @@ var pngquant = require('imagemin-pngquant');
 var gulpif = require('gulp-if');
 var browserSync = require("browser-sync").create();
 var reload = browserSync.reload;
+
+// Testing plugins
+var karmaServer = require('karma').Server;
 var protractor = require("gulp-protractor").protractor;
 
-// PostCSS Plugins
+// PostCSS plugins
 var autoprefixer = require('autoprefixer');
 var cssgrace = require('cssgrace');
 var pseudoelements = require('postcss-pseudoelements');
@@ -130,6 +133,39 @@ gulp.task('img', function(){
     }))) // Minify only on prod
     .pipe(gulp.dest(path.dest+'img/'));
 
+});
+
+/* **************************************************
+*  Tests                                            *
+************************************************** */
+
+gulp.task('unit', function(done){
+
+  var path = config.env.dev;
+  var base = path.base, ref = config.sourceFiles.tests.unit;
+
+  		  new karmaServer({
+  		    configFile: __dirname + '/src/tests/unit.karma.conf.js',
+  		    singleRun: false
+  		  }, done).start();
+
+});
+
+gulp.task('e2e', function(){
+
+  var path = config.env.dev;
+  var base = path.base, ref = config.sourceFiles.tests.e2e;
+
+  gulp.src( pathFiles(base, ref) )
+      .pipe(protractor({
+          configFile: __dirname + '/src/tests/e2e.protractor.conf.js',
+          args: ['--baseUrl', 'http://127.0.0.1:8000']
+      }))
+      .on('error', function(err) {
+        // Make sure failed tests cause gulp to exit non-zero
+        //console.log(err);
+        this.emit('end'); //instead of erroring the stream, end it
+      });
 });
 
 /* **************************************************

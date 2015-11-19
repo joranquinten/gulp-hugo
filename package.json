@@ -32,9 +32,13 @@
     "gulp-util": "^3.0.7",
     "imagemin-pngquant": "^4.2.0",
     "jshint-stylish": "^2.1.0",
+    "karma-chrome-launcher": "^0.2.1",
     "postcss-pseudoelements": "^3.0.0",
+    "protractor": "^3.0.0",
     "run-sequence": "^1.1.4"
   },
-
+  "scripts": {
+    "install": "node node_modules/protractor/bin/webdriver-manager update"
+  },
   "license": "MIT"
 }

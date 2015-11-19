@@ -31,7 +31,11 @@
         ],
         "images": [
             "img/**/*.{gif,png,jpeg,jpg,svg}"
-        ]
+        ],
+        "tests" : {
+          "e2e" : ["tests/e2e/**/*.js"],
+          "unit" : ["tests/unit/**/*.js"]
+        }
     },
     "watchFiles": {
         "scss": "scss/**/*.s+(a|c)ss",
@@ -55,10 +59,6 @@
                 "chrome",
                 "iexplore"
             ]
-        },
-        "protractor" : {
-          "configFile" : "src/tests/protractor.config.js",
-          "args": ["--baseUrl", "http://127.0.0.1:8000"]
         }
     }
 }
