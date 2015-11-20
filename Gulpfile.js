@@ -33,25 +33,6 @@ gulp.task('prod', function(){
   runSequence(['js','css','html','img'],'serve','watch');
 });
 
-gulp.task('test',function(){
-  deleteFolderRecursive('src/scss/foundation');
-});
-
-var deleteFolderRecursive = function(path) {
-  var fs = require('fs');
-  if( fs.existsSync(path) ) {
-      fs.readdirSync(path).forEach(function(file) {
-        var curPath = path + "/" + file;
-          if(fs.statSync(curPath).isDirectory()) { // recurse
-              deleteFolderRecursive(curPath);
-          } else { // delete file
-              fs.unlinkSync(curPath);
-          }
-      });
-      fs.rmdirSync(path);
-    }
-};
-
 /*
 Tasks by type
 */
