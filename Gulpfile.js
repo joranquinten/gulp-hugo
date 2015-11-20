@@ -141,6 +141,8 @@ gulp.task('img', function(){
 
 gulp.task('unit', function(done){
 
+  console.log('Remember: Unit test follow a watch pattern on the testfiles.');
+
   var path = config.env.dev;
   var base = path.base, ref = config.sourceFiles.tests.unit;
 
@@ -163,7 +165,6 @@ gulp.task('e2e', function(){
       }))
       .on('error', function(err) {
         // Make sure failed tests cause gulp to exit non-zero
-        //console.log(err);
         this.emit('end'); //instead of erroring the stream, end it
       });
 });
