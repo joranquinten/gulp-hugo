@@ -17,11 +17,10 @@
         "js": [
             "!js/vendor/modernizr.js",
             "js/vendor/**/.*.js",
-            "js/plugins/**/*.js",
             "js/app.js"
         ],
         "scss": [
-            "scss/**/*.s+(a|c)ss"
+            "scss/styles.s+(a|c)ss"
         ],
         "css": [
             "css/**/*.css"

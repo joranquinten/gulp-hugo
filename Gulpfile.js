@@ -24,22 +24,33 @@ gulp.task('default', function() {
 });
 
 gulp.task('dev', function(){
-  notify('Starting dev','title');
   config.isDevelop = true;
   runSequence(['js','css','html','img'],'serve','watch');
 });
+
 gulp.task('prod', function(){
   config.isDevelop = false;
   runSequence(['js','css','html','img'],'serve','watch');
 });
 
-gulp.task('test', function(){
-  notify('This is a warning','warning');
-  notify('This is an error','error');
-  notify('This is a smashing success','success');
-  notify('This is an announcement','title');
-  notify('This is a default message');
-})
+gulp.task('test',function(){
+  deleteFolderRecursive('src/scss/foundation');
+});
+
+var deleteFolderRecursive = function(path) {
+  var fs = require('fs');
+  if( fs.existsSync(path) ) {
+      fs.readdirSync(path).forEach(function(file) {
+        var curPath = path + "/" + file;
+          if(fs.statSync(curPath).isDirectory()) { // recurse
+              deleteFolderRecursive(curPath);
+          } else { // delete file
+              fs.unlinkSync(curPath);
+          }
+      });
+      fs.rmdirSync(path);
+    }
+};
 
 /*
 Tasks by type
@@ -53,15 +64,13 @@ gulp.task('js',function(){
   gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('**/*.js'))
     .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
-    .pipe(plugins.jshint())
-    .pipe(plugins.jshint.reporter('jshint-stylish'))
+    //.pipe(plugins.jshint())
+    //.pipe(plugins.jshint.reporter('jshint-stylish'))
     .pipe(plugins.concat('critical.js'))
     .pipe(gulpif(!config.isDevelop, plugins.uglify()))
     .pipe(gulpif(!config.isDevelop, plugins.stripDebug()))
     .pipe(gulp.dest(path.dest+'js/'))
     .pipe(reload({stream: true}));
-
-    notify('Critital JS files minified.','success');
 
   ref = config.sourceFiles.js;
 
@@ -75,25 +84,25 @@ gulp.task('js',function(){
     .pipe(gulpif(!config.isDevelop, plugins.stripDebug()))
     .pipe(gulp.dest(path.dest+'js/'))
     .pipe(reload({stream: true}));
-
-    notify('JS files minified.','success');
 });
 
 gulp.task('css', function(){
 
-var path = config.env.dev;
-var base = path.base, ref = config.sourceFiles.scss;
-if (!config.isDevelop) path = config.env.prod;
+  notify('Disabled UnCSS, in order to activate, NO CSS selectors should be manipulated via JS.','warning');
 
-var processors = [
-  autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
-  require('cssgrace'),
-  pseudoelements
-];
+  var path = config.env.dev;
+  var base = path.base, ref = config.sourceFiles.scss;
+  if (!config.isDevelop) path = config.env.prod;
 
-if (!config.isDevelop) {
-  processors.push( cssnano({discardComments: {removeAll: true}}) );
-}
+  var processors = [
+    autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
+    require('cssgrace'), // Not compatible with ZURB Foundation
+    pseudoelements
+  ];
+
+  if (!config.isDevelop) {
+    processors.push( cssnano({discardComments: {removeAll: true}}) );
+  }
 
   return gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('**/styles.s+(a|c)ss'))
@@ -101,11 +110,10 @@ if (!config.isDevelop) {
     .pipe(plugins.scssLint(config.plugins.scssLint))
     .pipe(plugins.sass())
     .pipe(plugins.concat('styles.css'))
+    //.pipe(plugins.uncss({ html: pathFiles(base, config.sourceFiles.html) }))
     .pipe(plugins.postcss(processors)) // ♤ PostCSS ♤
     .pipe(gulp.dest(path.dest + 'css/'))
     .pipe(reload({stream: true}));
-
-    notify('CSS files minified.','success');
 });
 
 gulp.task('html', function(){
@@ -120,9 +128,6 @@ gulp.task('html', function(){
     .pipe(gulpif(!config.isDevelop, plugins.htmlmin( config.plugins.minifyHTML )))
     .pipe(gulp.dest(path.dest+'/'))
     .pipe(reload({stream: true}));
-
-    notify('HTML files minified.','success');
-
 });
 
 gulp.task('img', function(){
@@ -138,9 +143,6 @@ gulp.task('img', function(){
       use: [pngquant()]
     }))) // Minify only on prod
     .pipe(gulp.dest(path.dest+'img/'));
-
-    notify('Image files minified.','success');
-
 });
 
 /* **************************************************
@@ -184,7 +186,14 @@ Utilities
 gulp.task('serve', function(){
   var env = 'dev';
   if (!config.isDevelop) env = 'prod';
+
+  notify('Serve assumes you have a local webserver running and content is accessible via localhost.','title');
+  // Assumes you have a local webserver running and content is accessible via localhost by default
   browserSync.init({server: false, proxy: 'localhost/'+ currentDir() +'/'+ env, browser: config.plugins.browserSync.browsers });
+
+  // Use static server:
+  // browserSync.init({server: { baseDir: './' }, browser: config.plugins.browserSync.browsers });
+
 });
 
 gulp.task('watch', function(){
@@ -195,8 +204,6 @@ gulp.task('watch', function(){
   gulp.watch(base+''+config.watchFiles.js, ['js']);
   gulp.watch(base+''+config.watchFiles.html, ['html']);
   gulp.watch(base+''+config.watchFiles.images, ['img']);
-
-  notify('Wachting for changes.','title');
 });
 
 /* Other helpers */
@@ -229,7 +236,7 @@ function notify(msg,type){
 }
 
 function pathFiles(base, collection){
- if ((typeof(collection) === 'array') || (typeof(collection) === 'object')) {
+ if (typeof(collection) === 'object') {
  var ar = []; for (var i=0; i< collection.length; i++){ ar.push( base +''+ collection[i] ); } return ar;
  } else if (typeof(collection) === 'string') {
    return base +''+ collection;
