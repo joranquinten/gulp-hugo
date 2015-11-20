@@ -1,8 +1,3 @@
-
-/* **************************************************
-*  Load plugins                                     *
-************************************************** */
-
 require('es6-promise').polyfill();
 var config = require('./gulp-config.json');
 var gulp = require('gulp');
@@ -17,34 +12,38 @@ var reload = browserSync.reload;
 var karmaServer = require('karma').Server;
 var protractor = require("gulp-protractor").protractor;
 
-// PostCSS plugins
+// PostCSS Plugins
 var autoprefixer = require('autoprefixer');
 var cssgrace = require('cssgrace');
 var pseudoelements = require('postcss-pseudoelements');
 var cssnano = require('cssnano');
 
-/* **************************************************
-*  Main tasks                                       *
-************************************************** */
-
+// Assuming default means develop
 gulp.task('default', function() {
   runSequence('dev');
 });
 
 gulp.task('dev', function(){
+  notify('Starting dev','title');
   config.isDevelop = true;
   runSequence(['js','css','html','img'],'serve','watch');
 });
-
 gulp.task('prod', function(){
   config.isDevelop = false;
   runSequence(['js','css','html','img'],'serve','watch');
 });
 
-/* **************************************************
-*  Tasks by type                                    *
-************************************************** */
+gulp.task('test', function(){
+  notify('This is a warning','warning');
+  notify('This is an error','error');
+  notify('This is a smashing success','success');
+  notify('This is an announcement','title');
+  notify('This is a default message');
+})
 
+/*
+Tasks by type
+*/
 gulp.task('js',function(){
 
   var path = config.env.dev;
@@ -62,6 +61,8 @@ gulp.task('js',function(){
     .pipe(gulp.dest(path.dest+'js/'))
     .pipe(reload({stream: true}));
 
+    notify('Critital JS files minified.','success');
+
   ref = config.sourceFiles.js;
 
   return gulp.src( pathFiles(base, ref) )
@@ -74,23 +75,25 @@ gulp.task('js',function(){
     .pipe(gulpif(!config.isDevelop, plugins.stripDebug()))
     .pipe(gulp.dest(path.dest+'js/'))
     .pipe(reload({stream: true}));
+
+    notify('JS files minified.','success');
 });
 
 gulp.task('css', function(){
 
-  var path = config.env.dev;
-  var base = path.base, ref = config.sourceFiles.scss;
-  if (!config.isDevelop) path = config.env.prod;
+var path = config.env.dev;
+var base = path.base, ref = config.sourceFiles.scss;
+if (!config.isDevelop) path = config.env.prod;
 
-  var processors = [
-    autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
-    require('cssgrace'),
-    pseudoelements
-  ];
+var processors = [
+  autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
+  require('cssgrace'),
+  pseudoelements
+];
 
-  if (!config.isDevelop) {
-    processors.push( cssnano({discardComments: {removeAll: true}}) );
-  }
+if (!config.isDevelop) {
+  processors.push( cssnano({discardComments: {removeAll: true}}) );
+}
 
   return gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('**/styles.s+(a|c)ss'))
@@ -102,6 +105,7 @@ gulp.task('css', function(){
     .pipe(gulp.dest(path.dest + 'css/'))
     .pipe(reload({stream: true}));
 
+    notify('CSS files minified.','success');
 });
 
 gulp.task('html', function(){
@@ -116,6 +120,8 @@ gulp.task('html', function(){
     .pipe(gulpif(!config.isDevelop, plugins.htmlmin( config.plugins.minifyHTML )))
     .pipe(gulp.dest(path.dest+'/'))
     .pipe(reload({stream: true}));
+
+    notify('HTML files minified.','success');
 
 });
 
@@ -133,6 +139,8 @@ gulp.task('img', function(){
     }))) // Minify only on prod
     .pipe(gulp.dest(path.dest+'img/'));
 
+    notify('Image files minified.','success');
+
 });
 
 /* **************************************************
@@ -141,7 +149,7 @@ gulp.task('img', function(){
 
 gulp.task('unit', function(done){
 
-  console.log('Remember: Unit test follow a watch pattern on the testfiles.');
+  notify('Starting unit tests. Note that this follow a watch pattern on testfiles, press Ctrl+C to quit.','title');
 
   var path = config.env.dev;
   var base = path.base, ref = config.sourceFiles.tests.unit;
@@ -164,15 +172,15 @@ gulp.task('e2e', function(){
           args: ['--baseUrl', 'http://127.0.0.1:8000']
       }))
       .on('error', function(err) {
-        // Make sure failed tests cause gulp to exit non-zero
         this.emit('end'); //instead of erroring the stream, end it
       });
+
+  notify('Starting end to end tests. Note that this starts up a browser and could take a while, press Ctrl+C to quit.','title');
 });
 
-/* **************************************************
-*  Utilities                                        *
-************************************************** */
-
+/*
+Utilities
+*/
 gulp.task('serve', function(){
   var env = 'dev';
   if (!config.isDevelop) env = 'prod';
@@ -187,14 +195,37 @@ gulp.task('watch', function(){
   gulp.watch(base+''+config.watchFiles.js, ['js']);
   gulp.watch(base+''+config.watchFiles.html, ['html']);
   gulp.watch(base+''+config.watchFiles.images, ['img']);
+
+  notify('Wachting for changes.','title');
 });
 
-/* **************************************************
-*  Other helpers                                    *
-************************************************** */
-
+/* Other helpers */
 function currentDir(){
   if (__dirname) return __dirname.split('\\').pop();
+}
+
+function notify(msg,type){
+  if (typeof(plugins.util) !== undefined){
+      switch(type){
+        case 'warning':
+          plugins.util.log(plugins.util.colors.yellow(msg));
+        break;
+        case 'error':
+          plugins.util.log(plugins.util.colors.bgRed(msg));
+        break;
+        case 'success':
+          plugins.util.log(plugins.util.colors.green(msg));
+        break;
+        case 'title':
+          plugins.util.log(plugins.util.colors.blue(msg));
+        break;
+        default:
+          plugins.util.log(plugins.util.colors.cyan(msg));
+      }
+  } else {
+    if (type !== undefined) msg = '['+ type +']: ' + msg;
+    console.log(msg);
+  }
 }
 
 function pathFiles(base, collection){
