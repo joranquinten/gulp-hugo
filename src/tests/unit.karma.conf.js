@@ -56,7 +56,7 @@ module.exports = function(config) {
     browsers: ['PhantomJS'],
 
     customLaunchers: {
-        chrome_without_security: {
+        chrome_without_security: { // Prevents certain alerts who interfere with bare testing
           base: "Chrome",
           flags: ["--disable-web-security"]
         }
@@ -69,5 +69,5 @@ module.exports = function(config) {
     // Concurrency level
     // how many browser should be started simultanous
     concurrency: Infinity
-  })
-}
+  });
+};

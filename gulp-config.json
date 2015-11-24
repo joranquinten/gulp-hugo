@@ -28,9 +28,7 @@
         "html": [
             "*.{html,htm,xml,txt}"
         ],
-        "images": [
-            "img/**/*.{gif,png,jpeg,jpg,svg}"
-        ],
+        "images": "img/**/*.{gif,png,jpeg,jpg,svg}",
         "tests" : {
           "e2e" : ["tests/e2e/**/*.js"],
           "unit" : ["tests/unit/**/*.js"]

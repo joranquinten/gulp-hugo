@@ -39,8 +39,8 @@ Tasks by type
 gulp.task('js',function(){
 
   var path = config.env.dev;
-  var base = path.base, ref = config.sourceFiles.jsCritical;
   if (!config.isDevelop) path = config.env.prod;
+  var base = path.base, ref = config.sourceFiles.jsCritical;
 
   gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('**/*.js'))
@@ -69,12 +69,11 @@ gulp.task('js',function(){
 
 gulp.task('css', function(){
 
-  notify('Disabled UnCSS, in order to activate, NO CSS selectors should be manipulated via JS.','warning');
-
   var path = config.env.dev;
-  var base = path.base, ref = config.sourceFiles.scss;
   if (!config.isDevelop) path = config.env.prod;
+  var base = path.base, ref = config.sourceFiles.scss;
 
+  // Define PostCSS plugins
   var processors = [
     autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
     require('cssgrace'), // Not compatible with ZURB Foundation
@@ -91,7 +90,7 @@ gulp.task('css', function(){
     .pipe(plugins.scssLint(config.plugins.scssLint))
     .pipe(plugins.sass())
     .pipe(plugins.concat('styles.css'))
-    //.pipe(plugins.uncss({ html: pathFiles(base, config.sourceFiles.html) }))
+    //.pipe(plugins.uncss({ html: pathFiles(base, config.sourceFiles.html) })) // UnCSS cleans up unused CSS code, but relies on (static) HTML files in order to extract identifiers, might be interesting for thinning out frameworks.
     .pipe(plugins.postcss(processors)) // ♤ PostCSS ♤
     .pipe(gulp.dest(path.dest + 'css/'))
     .pipe(reload({stream: true}));
@@ -100,8 +99,8 @@ gulp.task('css', function(){
 gulp.task('html', function(){
 
   var path = config.env.dev;
-  var base = path.base, ref = config.sourceFiles.html;
   if (!config.isDevelop) path = config.env.prod;
+  var base = path.base, ref = config.sourceFiles.html;
 
   return gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('*.{html,htm,xml,txt}'))
@@ -114,10 +113,13 @@ gulp.task('html', function(){
 gulp.task('img', function(){
 
   var path = config.env.dev;
-  var base = path.base, ref = config.sourceFiles.images;
   if (!config.isDevelop) path = config.env.prod;
+  var base = path.base, ref = config.sourceFiles.images;
+
+
 
   return gulp.src( pathFiles(base, ref) )
+    .pipe(watch({ glob: pathFiles(base, ref) }))
     .pipe(gulpif(!config.isDevelop, plugins.imagemin({
       progressive: true,
       svgoPlugins: [{removeViewBox: false}],
