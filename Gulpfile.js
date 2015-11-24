@@ -33,6 +33,10 @@ gulp.task('prod', function(){
   runSequence(['js','css','html','img'],'serve','watch');
 });
 
+gulp.task('prod:test', function(){
+  runSequence('prod','e2e');
+});
+
 /*
 Tasks by type
 */
@@ -76,17 +80,17 @@ gulp.task('css', function(){
   // Define PostCSS plugins
   var processors = [
     autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
-    require('cssgrace'), // Not compatible with ZURB Foundation
+    cssgrace,
     pseudoelements
   ];
 
   if (!config.isDevelop) {
-    processors.push( cssnano({discardComments: {removeAll: true}}) );
+    processors.push( cssnano({autoprefixer: false, discardComments: {removeAll: true}}) );
   }
 
   return gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('**/styles.s+(a|c)ss'))
-    .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
+    //.pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
     .pipe(plugins.scssLint(config.plugins.scssLint))
     .pipe(plugins.sass())
     .pipe(plugins.concat('styles.css'))
@@ -116,10 +120,7 @@ gulp.task('img', function(){
   if (!config.isDevelop) path = config.env.prod;
   var base = path.base, ref = config.sourceFiles.images;
 
-
-
   return gulp.src( pathFiles(base, ref) )
-    .pipe(watch({ glob: pathFiles(base, ref) }))
     .pipe(gulpif(!config.isDevelop, plugins.imagemin({
       progressive: true,
       svgoPlugins: [{removeViewBox: false}],
