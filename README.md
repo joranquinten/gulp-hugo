@@ -21,7 +21,7 @@ The production and development tasks take files as input ('src' folder), process
 
 ### Installation
 
-After installing the dependencies, installation should be as simple as cloning a repository to your local machine and running from the terminal: **npm install**. You could test this by running the four separate main tasks: **gulp dev**, **gulp prod**, **gulp unit**, **gulp e2e**. If any errors occur, check if all modules exist in package.json. Install omitted modules with the **--save-dev** flag, to at least update your own package.json.
+After installing the dependencies, installation should be as simple as cloning a repository to your local machine and running from the terminal: **npm install**. You could test this by running the four separate main tasks: **gulp dev**, **gulp prod**, **gulp unit**, **gulp e2e**. If any errors occur, check if all modules exist in package.json. Install omitted modules with the **--save-dev** flag, to at least update your own **package.json**.
 
 ### Configuration
 
