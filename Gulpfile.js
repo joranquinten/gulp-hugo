@@ -16,7 +16,6 @@ var protractor = require("gulp-protractor").protractor;
 var autoprefixer = require('autoprefixer');
 var cssgrace = require('cssgrace');
 var pseudoelements = require('postcss-pseudoelements');
-var cssnano = require('cssnano');
 
 // Assuming default means develop
 gulp.task('default', function() {
@@ -84,18 +83,15 @@ gulp.task('css', function(){
     pseudoelements
   ];
 
-  if (!config.isDevelop) {
-    processors.push( cssnano({autoprefixer: false, discardComments: {removeAll: true}}) );
-  }
-
   return gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('**/styles.s+(a|c)ss'))
-    //.pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
+    .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
     .pipe(plugins.scssLint(config.plugins.scssLint))
     .pipe(plugins.sass())
     .pipe(plugins.concat('styles.css'))
     //.pipe(plugins.uncss({ html: pathFiles(base, config.sourceFiles.html) })) // UnCSS cleans up unused CSS code, but relies on (static) HTML files in order to extract identifiers, might be interesting for thinning out frameworks.
     .pipe(plugins.postcss(processors)) // ♤ PostCSS ♤
+    .pipe(gulpif(config.isDevelop, plugins.minifyCss({compatibility: 'ie8'})))
     .pipe(gulp.dest(path.dest + 'css/'))
     .pipe(reload({stream: true}));
 });

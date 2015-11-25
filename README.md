@@ -46,7 +46,7 @@ Production (command: **gulp prod**) should follow the development process and is
 
 The package consists of a dozen and more individual plugins. I will address some of them here (alphabetically), the rest can be considered as a generic plugin and/or helper.
 
-* [autoprefixer](https://github.com/postcss/autoprefixer), [cssgrace](https://github.com/cssdream/cssgrace), [cssnano](https://github.com/ben-eb/cssnano), [postcss-pseudoelements](https://www.npmjs.com/package/postcss-pseudoelements) are PostCSS modules, which transform plain CSS to match the specifications.
+* [autoprefixer](https://github.com/postcss/autoprefixer), [cssgrace](https://github.com/cssdream/cssgrace), [postcss-pseudoelements](https://www.npmjs.com/package/postcss-pseudoelements) are PostCSS modules, which transform plain CSS to match the specifications.
 * [browser-sync](http://www.browsersync.io/): synchronizes changes to files directly into the browser. Multiple browsers are possible and input in any browser is synchronized to the other windows.
 * [gulp-filter](https://www.npmjs.com/package/gulp-filter), [gulp-if](https://www.npmjs.com/package/gulp-if), [gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins), [gulp-notify](https://www.npmjs.com/package/gulp-notify), [gulp-plumber](https://www.npmjs.com/package/gulp-plumber) and [gulp-util](https://www.npmjs.com/package/gulp-util) are helpers to simplify the gulpfile and tasks.
 * [gulp-postcss](https://www.npmjs.com/package/gulp-postcss) facilitates the use of PostCSS plugins
@@ -75,7 +75,7 @@ This tasks builds designated Javascript-files, concatenates them and (if product
 #### css
 
 The build assumes you will want to end up with only one CSS file and makes no distinction between critical and non critical CSS. (The performance gain is relatively low and it is somewhat difficult to determine which styles should be available directly and which should not.)
-The source are .scss files, which will be linted as sass-files. The sass-files will be transpiled and concatenated to a single CSS-file. The CSS-file is then modified by several PostCSS plugins, which mainly validate against ie8 or higher. A production specific task will minify the CSS before saving. Any change causes an automatic browser change. The browserSync plugin should only inject edited CSS, not reload the current page, handy!
+The source are .scss files, which will be linted as sass-files. The sass-files will be transpiled and concatenated to a single CSS-file. The CSS-file is then modified by several PostCSS plugins, which momentarily validate against ie8 or higher. A production specific task will minify the CSS before saving. Any change causes an automatic browser change. The browserSync plugin should only inject edited CSS, not reload the current page, handy!
 
 The CSS task may be modified, it currently contains sort of a hybrid between Sass-compiling and PostCSS modules, especially since PostCSS has very Sass-like capabilities, without the Ruby dependency. [It would probably be more efficient to port Sass-compiling to PostCSS.](http://benfrain.com/breaking-up-with-sass-postcss/)
 
@@ -123,7 +123,6 @@ Python ([2.7.10](https://www.python.org/downloads/release/python-2710/) 64-bit) 
 
 ## Todo
 
-* **Noticed an error in nanocss (when running gulp prod)!** seems to not work well with Sass, or skips Sass files completely and does not work in general.
 * Watch task for the creation and deletion of new files
 * Extend the main config file with several loose lines in existing files
 * Implement gzip
