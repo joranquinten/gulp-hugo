@@ -152,7 +152,6 @@ Python ([2.7.10](https://www.python.org/downloads/release/python-2710/) 64-bit) 
 
 ## Todo
 
-* Extend the main config file with several loose lines in existing files
 * [Replace Sass completely with PostCSS modules](https://pawelgrzybek.com/from-sass-to-postcss/)
 * Deploy directly into Cordys
 

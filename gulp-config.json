@@ -54,6 +54,9 @@
         "scssLint": {
             "config": "lint-scss.yml"
         },
+        "autoprefixer" : {
+          "browsers": ["ie 8-10", "Last 2 Chrome versions"]
+        },
         "minifyCSS": {
             "compatibility": "ie8"
         },

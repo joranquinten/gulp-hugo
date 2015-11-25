@@ -61,7 +61,6 @@ gulp.task('js',function(){
   }
 
   gulp.src( pathFiles(base, ref) )
-    .pipe(plugins.filter('**/*.js'))
     .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
     //.pipe(plugins.jshint())
     //.pipe(plugins.jshint.reporter('jshint-stylish'))
@@ -79,7 +78,6 @@ gulp.task('js',function(){
   }
 
   return gulp.src( pathFiles(base, ref) )
-    .pipe(plugins.filter('**/*.js'))
     .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
     .pipe(plugins.jshint())
     .pipe(plugins.jshint.reporter('jshint-stylish'))
@@ -103,13 +101,12 @@ gulp.task('css', function(){
 
   // Define PostCSS plugins
   var processors = [
-    autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
+    autoprefixer(config.plugins.autprefixer),
     cssgrace,
     pseudoelements
   ];
 
   return gulp.src( pathFiles(base, ref) )
-    .pipe(plugins.filter('**/styles.s+(a|c)ss'))
     .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
     .pipe(plugins.scssLint(config.plugins.scssLint))
     .pipe(plugins.sass())
@@ -133,7 +130,6 @@ gulp.task('html', function(){
   }
 
   return gulp.src( pathFiles(base, ref) )
-    .pipe(plugins.filter('*.{html,htm,xml,txt}'))
     .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
     .pipe(gulpif(!config.settings.isDevelop, plugins.htmlmin( config.plugins.minifyHTML )))
     .pipe(gulpif(config.settings.enableGZIP, plugins.gzip( config.plugins.gzipOptions )))
@@ -171,10 +167,10 @@ gulp.task('unit', function(done){
   var path = config.env.dev;
   var base = path.base, ref = config.sourceFiles.tests.unit;
 
-  		  new karmaServer({
-  		    configFile: __dirname + '/src/tests/unit.karma.conf.js',
-  		    singleRun: false
-  		  }, done).start();
+  new karmaServer({
+    configFile: __dirname + '/src/tests/unit.karma.conf.js',
+    singleRun: false
+  }, done).start();
 
 });
 
@@ -188,9 +184,7 @@ gulp.task('e2e', function(){
           configFile: __dirname + '/src/tests/e2e.protractor.conf.js',
           args: ['--baseUrl', 'http://127.0.0.1:8000']
       }))
-      .on('error', function(err) {
-        this.emit('end'); //instead of erroring the stream, end it
-      });
+      .on('error', function(err) { this.emit('end'); });
 
   notify('Starting end to end tests. Note that this starts up a browser and could take a while, press Ctrl+C to quit.','title');
 });
@@ -199,8 +193,9 @@ gulp.task('e2e', function(){
 Utilities
 */
 gulp.task('serve', function(){
-  var env = 'dev';
-  if (!config.settings.isDevelop) env = 'prod';
+  var env = config.env.dev.base;
+  if (!config.settings.isDevelop) env = config.env.prod.base;
+  env = env.replace('./','');
 
   notify('Serve assumes you have a local webserver running and content is accessible via localhost.','title');
   // Assumes you have a local webserver running and content is accessible via localhost by default
