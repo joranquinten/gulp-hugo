@@ -5,6 +5,7 @@ var plugins = require("gulp-load-plugins")({ pattern: ['gulp-*', 'gulp.*'], repl
 var runSequence = require('run-sequence');
 var pngquant = require('imagemin-pngquant');
 var gulpif = require('gulp-if');
+var del = require('del');
 var browserSync = require("browser-sync").create();
 var reload = browserSync.reload;
 
@@ -27,13 +28,23 @@ gulp.task('dev', function(){
   runSequence(['js','css','html','img'],'serve','watch');
 });
 
+gulp.task('dev:nowatch', function(){
+  config.isDevelop = true;
+  runSequence(['js','css','html','img']);
+});
+
 gulp.task('prod', function(){
   config.isDevelop = false;
   runSequence(['js','css','html','img'],'serve','watch');
 });
 
+gulp.task('prod:nowatch', function(){
+  config.isDevelop = false;
+  runSequence(['js','css','html','img']);
+});
+
 gulp.task('prod:test', function(){
-  runSequence('prod','e2e');
+  runSequence('prod:nowatch','e2e');
 });
 
 /*
@@ -44,6 +55,10 @@ gulp.task('js',function(){
   var path = config.env.dev;
   if (!config.isDevelop) path = config.env.prod;
   var base = path.base, ref = config.sourceFiles.jsCritical;
+
+  if (config.cleanBeforeRun) {
+    del([ path.dest + ref ]);
+  }
 
   gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('**/*.js'))
@@ -57,6 +72,10 @@ gulp.task('js',function(){
     .pipe(reload({stream: true}));
 
   ref = config.sourceFiles.js;
+
+  if (config.cleanBeforeRun) {
+    del([ path.dest + ref ]);
+  }
 
   return gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('**/*.js'))
@@ -76,6 +95,10 @@ gulp.task('css', function(){
   if (!config.isDevelop) path = config.env.prod;
   var base = path.base, ref = config.sourceFiles.scss;
 
+  if (config.cleanBeforeRun) {
+    del([ path.dest + config.sourceFiles.css ]);
+  }
+
   // Define PostCSS plugins
   var processors = [
     autoprefixer({browsers: ['ie 8-10', 'Last 2 Chrome versions']}),
@@ -91,7 +114,7 @@ gulp.task('css', function(){
     .pipe(plugins.concat('styles.css'))
     //.pipe(plugins.uncss({ html: pathFiles(base, config.sourceFiles.html) })) // UnCSS cleans up unused CSS code, but relies on (static) HTML files in order to extract identifiers, might be interesting for thinning out frameworks.
     .pipe(plugins.postcss(processors)) // ♤ PostCSS ♤
-    .pipe(gulpif(config.isDevelop, plugins.minifyCss({compatibility: 'ie8'})))
+    .pipe(gulpif(!config.isDevelop, plugins.minifyCss({compatibility: 'ie8'})))
     .pipe(gulp.dest(path.dest + 'css/'))
     .pipe(reload({stream: true}));
 });
@@ -101,6 +124,10 @@ gulp.task('html', function(){
   var path = config.env.dev;
   if (!config.isDevelop) path = config.env.prod;
   var base = path.base, ref = config.sourceFiles.html;
+
+  if (config.cleanBeforeRun) {
+    del([ path.dest + ref ]);
+  }
 
   return gulp.src( pathFiles(base, ref) )
     .pipe(plugins.filter('*.{html,htm,xml,txt}'))
@@ -115,6 +142,10 @@ gulp.task('img', function(){
   var path = config.env.dev;
   if (!config.isDevelop) path = config.env.prod;
   var base = path.base, ref = config.sourceFiles.images;
+
+  if (config.cleanBeforeRun) {
+    del([ path.dest + ref ]);
+  }
 
   return gulp.src( pathFiles(base, ref) )
     .pipe(gulpif(!config.isDevelop, plugins.imagemin({
@@ -180,10 +211,31 @@ gulp.task('watch', function(){
 
   var path = config.env.dev;
   var base = path.base;
-  gulp.watch(base+''+config.watchFiles.scss, ['css']);
-  gulp.watch(base+''+config.watchFiles.js, ['js']);
-  gulp.watch(base+''+config.watchFiles.html, ['html']);
-  gulp.watch(base+''+config.watchFiles.images, ['img']);
+
+  plugins.watch(base+''+config.watchFiles.scss, function () {
+    gulp.run(['css']);
+  });
+
+  plugins.watch(base+''+config.watchFiles.js, function () {
+    gulp.run(['js']);
+  });
+
+  plugins.watch(base+''+config.watchFiles.html, function () {
+    gulp.run(['html']);
+  });
+
+  plugins.watch(base+''+config.watchFiles.images, function () {
+    gulp.run(['img']);
+  });
+
+});
+
+gulp.task('clean:dev', function(){
+  return del([ config.env.dev.dest ]);
+});
+
+gulp.task('clean:prod', function(){
+  return del([ config.env.prod.dest ]);
 });
 
 /* Other helpers */

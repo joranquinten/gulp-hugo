@@ -1,5 +1,6 @@
 {
     "isDevelop": true,
+    "cleanBeforeRun" : true,
     "env": {
         "dev": {
             "base": "./src/",
@@ -17,6 +18,7 @@
         "js": [
             "!js/vendor/modernizr.js",
             "js/vendor/**/.*.js",
+            "js/*.js",
             "js/app.js"
         ],
         "scss": [
