@@ -112,7 +112,7 @@ This is one to the two types of testing tasks. This task is configured to output
 At the moment, a PhantomJS browser is used to validate the unit tests. A preconfigured Chrome browser is available, but disabled. The files (both test as javascript files) are being watched continuously and trigger a rerun of the tests on change. The task is configured to support Jasmine.
 
 #### e2e
-This is the end to end testing task. This task fires up a browser and performs instructed user input to validate against the written tests. This is not a task intend for continuous use and should be run before any deployment. The task starts a standalone Selenium server, opens a new browsers and starts automating the test instructions. This plugin follows a certain config file as well, which is located in the 'tests' folder: **e2e.protractor.conf.js**. It is possible to chain the production task with the end to end test, with the command: **gulp prod-test**.
+This is the end to end testing task. This task fires up a browser and performs instructed user input to validate against the written tests. This is not a task intend for continuous use and should be run before any deployment. The task starts a standalone Selenium server, opens a new browsers and starts automating the test instructions. This plugin follows a certain config file as well, which is located in the 'tests' folder: **e2e.protractor.conf.js**. It is possible to chain the production task with the end to end test, with the command: **gulp prod:test**.
 
 Due to security restraints on my device, I was unable to trigger these tests on Google Chrome and are therefore being triggered via Firefox.
 
@@ -134,7 +134,7 @@ Cleans up the production folder completely, does not generate a new environment.
 
 ## Resources
 
-* [GulpJS](http://gulpjs.com/)
+* [Gulp](http://gulpjs.com/)
 * [Node.js](https://nodejs.org/en/)
 * [PhantomJS](http://phantomjs.org/)
 * [Jasmine](http://jasmine.github.io/) ([2.3](http://jasmine.github.io/2.3/introduction.html))
