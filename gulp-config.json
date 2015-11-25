@@ -1,7 +1,8 @@
 {
     "settings": {
         "isDevelop": true,
-        "cleanBeforeRun": true
+        "cleanBeforeRun": true,
+        "enableGZIP": false
     },
     "env": {
         "dev": {
@@ -58,6 +59,12 @@
         },
         "minifyHTML": {
             "collapseWhitespace": true
+        },
+        "gzipOptions": {
+            "append": true,
+            "extension": "gz",
+            "threshold": "1kb",
+            "level": 9
         },
         "browserSync": {
             "browsers": [

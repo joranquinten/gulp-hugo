@@ -68,6 +68,7 @@ gulp.task('js',function(){
     .pipe(plugins.concat('critical.js'))
     .pipe(gulpif(!config.settings.isDevelop, plugins.uglify()))
     .pipe(gulpif(!config.settings.isDevelop, plugins.stripDebug()))
+    .pipe(gulpif(config.settings.enableGZIP, plugins.gzip( config.plugins.gzipOptions )))
     .pipe(gulp.dest(path.dest+'js/'))
     .pipe(reload({stream: true}));
 
@@ -85,6 +86,7 @@ gulp.task('js',function(){
     .pipe(plugins.concat('app.js'))
     .pipe(gulpif(!config.settings.isDevelop, plugins.uglify()))
     .pipe(gulpif(!config.settings.isDevelop, plugins.stripDebug()))
+    .pipe(gulpif(config.settings.enableGZIP, plugins.gzip( config.plugins.gzipOptions )))
     .pipe(gulp.dest(path.dest+'js/'))
     .pipe(reload({stream: true}));
 });
@@ -115,6 +117,7 @@ gulp.task('css', function(){
     //.pipe(plugins.uncss({ html: pathFiles(base, config.sourceFiles.html) })) // UnCSS cleans up unused CSS code, but relies on (static) HTML files in order to extract identifiers, might be interesting for thinning out frameworks.
     .pipe(plugins.postcss(processors)) // ♤ PostCSS ♤
     .pipe(gulpif(!config.settings.isDevelop, plugins.minifyCss({compatibility: 'ie8'})))
+    .pipe(gulpif(config.settings.enableGZIP, plugins.gzip( config.plugins.gzipOptions )))
     .pipe(gulp.dest(path.dest + 'css/'))
     .pipe(reload({stream: true}));
 });
@@ -133,6 +136,7 @@ gulp.task('html', function(){
     .pipe(plugins.filter('*.{html,htm,xml,txt}'))
     .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
     .pipe(gulpif(!config.settings.isDevelop, plugins.htmlmin( config.plugins.minifyHTML )))
+    .pipe(gulpif(config.settings.enableGZIP, plugins.gzip( config.plugins.gzipOptions )))
     .pipe(gulp.dest(path.dest+'/'))
     .pipe(reload({stream: true}));
 });

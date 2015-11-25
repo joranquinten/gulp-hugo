@@ -16,6 +16,7 @@
     "gulp-concat": "^2.6.0",
     "gulp-csslint": "^0.2.0",
     "gulp-filter": "^3.0.1",
+    "gulp-gzip": "^1.2.0",
     "gulp-htmlmin": "^1.2.0",
     "gulp-if": "^2.0.0",
     "gulp-imagemin": "^2.4.0",
