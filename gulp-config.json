@@ -1,6 +1,8 @@
 {
-    "isDevelop": true,
-    "cleanBeforeRun" : true,
+    "settings": {
+        "isDevelop": true,
+        "cleanBeforeRun": true
+    },
     "env": {
         "dev": {
             "base": "./src/",
@@ -31,9 +33,13 @@
             "*.{html,htm,xml,txt}"
         ],
         "images": "img/**/*.{gif,png,jpeg,jpg,svg}",
-        "tests" : {
-          "e2e" : ["tests/e2e/**/*.js"],
-          "unit" : ["tests/unit/**/*.js"]
+        "tests": {
+            "e2e": [
+                "tests/e2e/**/*.js"
+            ],
+            "unit": [
+                "tests/unit/**/*.js"
+            ]
         }
     },
     "watchFiles": {
@@ -44,8 +50,8 @@
         "images": "img/**/*.{gif,png,jpeg,jpg,svg}"
     },
     "plugins": {
-        "scssLint" : {
-          "config": "lint-scss.yml"
+        "scssLint": {
+            "config": "lint-scss.yml"
         },
         "minifyCSS": {
             "compatibility": "ie8"
