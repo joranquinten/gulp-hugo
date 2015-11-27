@@ -18,6 +18,7 @@ var autoprefixer = require('autoprefixer');
 var cssgrace = require('cssgrace');
 var pseudoelements = require('postcss-pseudoelements');
 
+
 // Assuming default means develop
 gulp.task('default', function() {
   runSequence('dev');
@@ -62,12 +63,14 @@ gulp.task('js',function(){
 
   gulp.src( pathFiles(base, ref) )
     .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
+    .pipe(plugins.sourcemaps.init())
     //.pipe(plugins.jshint())
     //.pipe(plugins.jshint.reporter('jshint-stylish'))
     .pipe(plugins.concat('critical.js'))
     .pipe(gulpif(!config.settings.isDevelop, plugins.uglify()))
     .pipe(gulpif(!config.settings.isDevelop, plugins.stripDebug()))
     .pipe(gulpif(config.settings.enableGZIP, plugins.gzip( config.plugins.gzipOptions )))
+    .pipe(plugins.sourcemaps.write())
     .pipe(gulp.dest(path.dest+'js/'))
     .pipe(reload({stream: true}));
 
@@ -79,12 +82,15 @@ gulp.task('js',function(){
 
   return gulp.src( pathFiles(base, ref) )
     .pipe(plugins.plumber({ handleError: function (err) {console.log(err);this.emit('end');} }))
+    .pipe(plugins.sourcemaps.init())
+    .pipe(plugins.concat('app.js'))
+    .pipe(plugins.removeUseStrict())
     .pipe(plugins.jshint())
     .pipe(plugins.jshint.reporter('jshint-stylish'))
-    .pipe(plugins.concat('app.js'))
     .pipe(gulpif(!config.settings.isDevelop, plugins.uglify()))
     .pipe(gulpif(!config.settings.isDevelop, plugins.stripDebug()))
     .pipe(gulpif(config.settings.enableGZIP, plugins.gzip( config.plugins.gzipOptions )))
+    .pipe(plugins.sourcemaps.write('../maps', {includeContent: false}))
     .pipe(gulp.dest(path.dest+'js/'))
     .pipe(reload({stream: true}));
 });
@@ -193,8 +199,8 @@ gulp.task('e2e', function(){
 Utilities
 */
 gulp.task('serve', function(){
-  var env = config.env.dev.base;
-  if (!config.settings.isDevelop) env = config.env.prod.base;
+  var env = config.env.dev.dest;
+  if (!config.settings.isDevelop) env = config.env.prod.dest;
   env = env.replace('./','');
 
   notify('Serve assumes you have a local webserver running and content is accessible via localhost.','title');
