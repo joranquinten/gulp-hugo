@@ -61,7 +61,9 @@
             "compatibility": "ie8"
         },
         "minifyHTML": {
-            "collapseWhitespace": true
+            "collapseWhitespace": true,
+            "removeComments" : true,
+            "minifyCSS" : true
         },
         "gzipOptions": {
             "append": true,

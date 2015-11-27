@@ -146,7 +146,7 @@ Cleans up the production folder completely, does not generate a new environment.
 
 ## Remarks
 
-Python ([2.7.10](https://www.python.org/downloads/release/python-2710/) 64-bit) was installed during development process of this package. It _should_ not be necessary. The package has been fully tested with Python not installed.
+Some changes need to be made to rely more on the config file than the gulpfile.
 
 ---
 
@@ -158,3 +158,12 @@ Python ([2.7.10](https://www.python.org/downloads/release/python-2710/) 64-bit) 
 ---
 
 Author: Joran Quinten
+
+
+---
+
+## Installation
+
+* Copy gulp-boilerplate to project folder
+* Copy npm to c:\Users\\*%Username%*\AppData\roaming\
+* Run **gulp** from command line in project folder
