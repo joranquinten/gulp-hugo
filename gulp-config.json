@@ -1,81 +1,107 @@
 {
-    "settings": {
-        "isDevelop": true,
-        "cleanBeforeRun": true,
-        "enableGZIP": false
+  "settings": {
+    "isDevelop": true,
+    "cleanBeforeRun": false,
+    "enableGZIP": false
+  },
+  "env": {
+    "dev": {
+      "base": "./src/",
+      "dest": "./dev/"
     },
-    "env": {
-        "dev": {
-            "base": "./src/",
-            "dest": "./dev/"
-        },
-        "prod": {
-            "base": "./src/",
-            "dest": "./prod/"
-        }
-    },
-    "sourceFiles": {
-        "jsCritical": [
-            "js/vendor/modernizr.js"
-        ],
-        "js": [
-            "!js/vendor/modernizr.js",
-            "js/vendor/**/.*.js",
-            "js/*.js",
-            "js/app.js"
-        ],
-        "scss": [
-            "scss/styles.s+(a|c)ss"
-        ],
-        "css": [
-            "css/**/*.css"
-        ],
-        "html": [
-            "*.{html,htm,xml,txt}"
-        ],
-        "images": "img/**/*.{gif,png,jpeg,jpg,svg}",
-        "tests": {
-            "e2e": [
-                "tests/e2e/**/*.js"
-            ],
-            "unit": [
-                "tests/unit/**/*.js"
-            ]
-        }
-    },
-    "watchFiles": {
-        "scss": "scss/**/*.s+(a|c)ss",
-        "css": "css/*.css",
-        "js": "js/**/*.js",
-        "html": "*.{html,htm,xml,txt}",
-        "images": "img/**/*.{gif,png,jpeg,jpg,svg}"
-    },
-    "plugins": {
-        "scssLint": {
-            "config": "lint-scss.yml"
-        },
-        "autoprefixer" : {
-          "browsers": ["ie 8-10", "Last 2 Chrome versions"]
-        },
-        "minifyCSS": {
-            "compatibility": "ie8"
-        },
-        "minifyHTML": {
-            "collapseWhitespace": true,
-            "removeComments" : true,
-            "minifyCSS" : true
-        },
-        "gzipOptions": {
-            "append": true,
-            "extension": "gz",
-            "threshold": "1kb",
-            "level": 9
-        },
-        "browserSync": {
-            "browsers": [
-                "chrome",
-                "iexplore"
-            ]
-        }
+    "prod": {
+      "base": "./src/",
+      "dest": "./prod/"
     }
+  },
+  "sourceFiles": {
+    "jsCritical": [
+      "angular/vendor/modernizr.js"
+    ],
+    "js": [
+      "angular/**/*.js",
+      "!angular/vendor/modernizr.js"
+    ],
+    "scss": [
+      "scss/styles.s+(a|c)ss"
+    ],
+    "css": [
+      "angular/**/*.css"
+    ],
+    "html": [
+      "**/*.html"
+    ],
+    "images": "img/**/*.{gif,png,jpeg,jpg,svg}",
+    "tests": {
+      "e2e": [
+        "tests/e2e/**/*.js"
+      ],
+      "unit": [
+        "tests/unit/**/*.js"
+      ]
+    }
+  },
+  "targetFolders": {
+    "js": "angular/",
+    "css": "angular/",
+    "html": "/",
+    "images": "img/",
+    "maps": "../"
+  },
+  "targetFiles": {
+    "js": "app.js",
+    "css": "styles.css"
+  },
+  "watchFiles": {
+    "scss": "scss/**/*.s+(a|c)ss",
+    "css": "angular/*.css",
+    "js": "angular/**/*.js",
+    "html": "*.{html,htm,xml,txt}",
+    "images": "img/**/*.{gif,png,jpeg,jpg,svg}"
+  },
+  "plugins": {
+    "scssLint": {
+      "config": "lint-scss.yml"
+    },
+    "autoprefixer": {
+      "browsers": ["ie 8-10", "Last 2 Chrome versions"]
+    },
+    "minifyCSS": {
+      "compatibility": "ie8"
+    },
+    "minifyHTML": {
+      "collapseWhitespace": true,
+      "removeComments": true,
+      "minifyCSS": true
+    },
+    "gzipOptions": {
+      "append": false,
+      "extension": "gz",
+      "threshold": "1kb",
+      "level": 9
+    },
+    "browserSync": {
+      "proxy": "localhost/cordys/nl-mindef-bop/apitest/portal.html",
+      "browsers": [
+        "chrome"
+      ]
+    },
+    "karma": {
+      "configFile": "/src/tests/unit.karma.conf.js"
+    },
+    "protractor": {
+      "configFile": "/src/tests/e2e.protractor.conf.js"
+    },
+    "jshintOptions": {
+      "node": true,
+      "globals": {
+        "app": false,
+        "angular": false,
+        "$": false,
+        "_": false,
+        "moment": false,
+        "window": false
+      }
+    }
+  }
 }

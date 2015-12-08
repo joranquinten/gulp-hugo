@@ -12,37 +12,72 @@ This package builds a default environment for front end development on a Windows
 The process is built around four main tasks: production, development, unit testing and end to end testing. These tasks call other, more specific tasks.
 The production and development tasks take files as input ('src' folder), process them, and place them in a designated folder. By default, these folders are called 'dev' and 'prod'. These folders are set up in the configuration file 'gulp-config.json' and mirror the folder structure of the 'src' folder.
 
-### Dependencies
+### Contents
+
+- [Dependencies](#Dependencies)
+- [Installation](#Installation)
+  - [Manual](#Manual)
+- [Configuration](#Configuration)
+- [Usage](#Usage)
+  - [Developing](#Developing)
+  - [Testing](#Testing)
+  - [Deploying for production](#Deploying)
+- [Components](#Components)
+- [Tasks](#Tasks)
+  - [Main tasks](#Maintasks)
+  - [Task components](#Taskcomponents)
+  - [Testing tasks](#Testingtasks)
+  - [Utility tasks](#Utilitytasks)
+- [Resources](#Resources)
+- [Todo](#Todo)
+
+---
+
+### Dependencies<a name="Dependencies"></a>
 
 The package needs some additional software to run. Gulp and its plugins are supported by Node.js. The rest of the software in this list is needed to perform certain tasks, but no primary tasks and could be neglected, based upon usage.
 
 * [Node.js](https://nodejs.org/en/)
-* [Ruby](http://rubyinstaller.org/) 2.2.3-p173-x64 (Sass-compiling, Ruby is optional when replaced with PostCSS modules)
+* [Gulp](https://gulpjs.com) (Install globally via npm: "**npm install gulp -g**")
 * [Selenium Standalone server](http://www.seleniumhq.org/download/) (e2e testing, automated install via Node Package Manager)
+* [Ruby](http://rubyinstaller.org/) 2.2.3-p173-x64 (Sass-compiling, Ruby is optional when replaced with PostCSS modules)
 * [Git](https://git-scm.com/download/win) (optional, for cloning the boilerplate)
 
-### Installation
+### Installation<a name="Installation"></a>
 
 After installing the dependencies, installation should be as simple as cloning (or even downloading) a repository to your local machine and running: **npm install** from the terminal.
 
-### Configuration
+#### Manual<a name="Manual"></a>
+
+If npm is not supported, follow these steps to reproduce the installation process. This involves manually copying certain folders from a local resource to the development environment.
+
+* Run the default installation (cloning the repository and installing the modules locally)
+* "Install" gulp globally by copying the "npm" folder to the target location: c:\Users\\*%Username%*\AppData\roaming\ (When using a machine as resource, the location would follow the same pattern.)
+* Manually copy the folder "node_modules" from your project folder to the development environment
+
+### Configuration<a name="Configuration"></a>
+
+All of the options are stored in the "gulp-config.json" file. This encompassed source locations, target locations and certain configuration options which target certain plugins. **The "Gulpfile.js" should never have to be edited in order to use this repository for your development or even deployment.**
+
+### Usage<a name="Usage"></a>
 
 The package is built around three main processes: developing, deploying for production and testing:
 
-### Developing
+### Developing<a name="Developing"></a>
 During development, you should have the 'dev' task running (command: **gulp dev**). This will monitor changes you make to files and trigger the browsersync process, to reflect your changes. Javascript and Sass files will be linted on the fly, but will be compiled in the same task.
 When unit tests are written, you probably want another terminal open, in which you run the unit tests during development (command: **gulp unit**). Any new files added to the structure, require a restart of the 'dev' task. Preferably, unit testing is embedded in the development process.
 
-### Testing
+### Testing<a name="Testing"></a>
 Besides the unit testing, the protractor plugin allows running end to end tests. These should not have to be run in tandem with a development process, but will serve as a automated test before any deployment (command: **gulp e2e**).
+
 Note: If Selenium is not properly updated via the install process, repeat the command in the terminal: **node node_modules/protractor/bin/webdriver-manager update**. A standalone .jar file should be stored in /node_modules/protractor/selenium/.
 
-### Deploying for production
+### Deploying for production<a name="Deploying"></a>
 Production (command: **gulp prod**) should follow the development process and is used to compile the source ('src' folder) to a production environment. The main difference is that all assets will be minified.
 
 ---
 
-## Components
+## Components<a name="Components"></a>
 
 The package consists of a dozen and more individual plugins. I will address some of them here (alphabetically), the rest can be considered as a generic plugin and/or helper.
 
@@ -56,12 +91,12 @@ _Note: Sass linting the may cause an overflow of errors, if imported directly in
 
 ---
 
-## Tasks (order of appearance)
+## Tasks (order of appearance)<a name="Tasks"></a>
 
 The configuration file should make it easier to modify the input, output and options of the tasks. Each task which touches files, addresses them via a function (pathFiles), which joins the base-folder with the separate filenames.
 _Note: tasks by default do not track the creation or deletion of files!_
 
-### Main tasks
+### Main tasks<a name="Maintasks"></a>
 
 These are the tasks which should be called upon, although specific tasks may be called upon individually.
 
@@ -84,7 +119,7 @@ This task only performs the build actions of the prod task, with no automated br
 #### prod:test
 This tast runs the build process before performing the e2e test. It calls the prod:nowatch task, so no other automated tasks are running in the background.
 
-### Task components
+### Task components<a name="Taskcomponents"></a>
 
 These tasks are used to read certain files, process them and output them to the desired folder ('dev' or 'prod'). The configuration dictates if existing files will be deleted. The deleting process follows the sourceFiles pattern. This ensures only files generated by the scope of the task may be deleted.
 
@@ -104,7 +139,7 @@ This is a fairly simple task: it copies all HTML-like files (html,htm,xml,txt) t
 #### img
 The images task takes image-like files (gif,png,jpeg,jpg,svg), minifies them automatically and places them in an 'img' folder.
 
-### Testing tasks
+### Testing tasks<a name="Testingtasks"></a>
 
 #### unit
 This is one to the two types of testing tasks. This task is configured to output its results in the terminal and should therefore be run in a separate terminal (this task should be run in tandem with the 'dev' or 'prod' tasks). The task starts a Karma webserver and custom browser in which the tests are validated. The Karma webserver follows a certain format for the config file. The specific config is found in the 'tests' folder: **unit.karma.conf.js**.
@@ -116,7 +151,7 @@ This is the end to end testing task. This task fires up a browser and performs i
 
 Due to security restraints on my device, I was unable to trigger these tests on Google Chrome and are therefore being triggered via Firefox.
 
-### Utility tasks
+### Utility tasks<a name="Utilitytasks"></a>
 
 #### serve
 This task facilitates the browserSync plugin. The current setup assumes a local webserver is already in place. BrowserSync could also be configured to act as as standalone webserver for static files (disabled, but visible in the Gulpfile.js).
@@ -132,7 +167,7 @@ Cleans up the production folder completely, does not generate a new environment.
 
 ---
 
-## Resources
+## Resources<a name="Resources"></a>
 
 * [Gulp](http://gulpjs.com/)
 * [Node.js](https://nodejs.org/en/)
@@ -144,13 +179,7 @@ Cleans up the production folder completely, does not generate a new environment.
 
 ---
 
-## Remarks
-
-Some changes need to be made to rely more on the config file than the gulpfile.
-
----
-
-## Todo
+## Todo<a name="Todo"></a>
 
 * [Replace Sass completely with PostCSS modules](https://pawelgrzybek.com/from-sass-to-postcss/)
 * Deploy directly into Cordys
@@ -158,12 +187,3 @@ Some changes need to be made to rely more on the config file than the gulpfile.
 ---
 
 Author: Joran Quinten
-
-
----
-
-## Installation
-
-* Copy gulp-boilerplate to project folder
-* Copy npm to c:\Users\\*%Username%*\AppData\roaming\
-* Run **gulp** from command line in project folder
