@@ -105,7 +105,7 @@ gulp.task('css', function() {
 
   // Define PostCSS plugins
   var processors = [
-    autoprefixer(config.plugins.autprefixer),
+    autoprefixer(config.plugins.autoprefixer),
     cssgrace,
     pseudoelements
   ];
@@ -182,28 +182,37 @@ gulp.task('img', function() {
 
 gulp.task('usemin', function() {
 
-  var path = config.env.dev;
-  if (!config.settings.isDevelop) path = config.env.prod;
-  var base = path.base,
-    ref = config.sourceFiles.html;
+  if (config.settings.enableUsemin) {
 
-  if (config.settings.cleanBeforeRun) {
-    del([path.dest + ref]);
+    var path = config.env.dev;
+    if (!config.settings.isDevelop) path = config.env.prod;
+    var base = path.base,
+      ref = config.sourceFiles.html;
+
+    if (config.settings.cleanBeforeRun) {
+      del([path.dest + ref]);
+    }
+
+    return gulp.src(pathFiles(base, ref))
+      .pipe(plugins.usemin({
+        css: [plugins.minifyCss({
+          compatibility: 'ie8'
+        })],
+        html: [function() {
+          return plugins.htmlmin(config.plugins.minifyHTML);
+        }],
+        js: [plugins.uglify],
+        inlinejs: [plugins.uglify],
+        inlinecss: [plugins.minifyCss({
+          compatibility: 'ie8'
+        })]
+      }))
+      .pipe(gulp.dest(path.dest + config.targetFolders.html))
+      .pipe(reload({
+        stream: true
+      }));
+
   }
-
-  return gulp.src(pathFiles(base, ref))
-    .pipe(plugins.usemin({
-      css:       [ plugins.minifyCss({ compatibility: 'ie8' }) ],
-      html:      [ function () {return plugins.htmlmin( config.plugins.minifyHTML );} ],
-      js:        [ plugins.uglify ],
-      inlinejs:  [ plugins.uglify ],
-      inlinecss: [ plugins.minifyCss({ compatibility: 'ie8' }) ]
-    }))
-    .pipe(gulp.dest(path.dest + config.targetFolders.html))
-    .pipe(reload({
-      stream: true
-    }));
-
 });
 
 /* **************************************************
@@ -330,17 +339,17 @@ function pathFiles(base, collection) {
   if (typeof(collection) === 'object') {
     var ar = [];
     for (var i = 0; i < collection.length; i++) {
-      ar.push(ignorePath(base,collection[i]));
+      ar.push(ignorePath(base, collection[i]));
     }
     return ar;
   } else if (typeof(collection) === 'string') {
-    return ignorePath(base,collection);
+    return ignorePath(base, collection);
   }
 }
 
-function ignorePath(base,file){
-  if (file.substring(0,1) === '!'){
-    return '!'+ base + '' + file.replace('!','');
+function ignorePath(base, file) {
+  if (file.substring(0, 1) === '!') {
+    return '!' + base + '' + file.replace('!', '');
   }
   return base + '' + file;
 }
