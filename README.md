@@ -27,7 +27,7 @@ The production and development tasks take files as input ('src' folder), process
   - [Main tasks](#markdown-header-main-tasks)
   - [Task components](#markdown-header-task-components)
   - [Testing tasks](#markdown-header-testing-tasks)
-  - [Utility tasks](markdown-header-#utility-tasks)
+  - [Utility tasks](#markdown-header-utility-tasks)
 - [Resources](#markdown-header-resources)
 - [Todo](#markdown-header-todo)
 
