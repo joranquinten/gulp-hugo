@@ -33,7 +33,7 @@ The production and development tasks take files as input ('src' folder), process
 
 ---
 
-### Dependencies<a name="Dependencies"></a>
+### Dependencies
 
 The package needs some additional software to run. Gulp and its plugins are supported by Node.js. The rest of the software in this list is needed to perform certain tasks, but no primary tasks and could be neglected, based upon usage.
 
