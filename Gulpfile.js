@@ -105,7 +105,7 @@ gulp.task('css', function() {
 
   // Define PostCSS plugins
   var processors = [
-    autoprefixer(config.plugins.autprefixer),
+    autoprefixer(config.plugins.autoprefixer),
     cssgrace,
     pseudoelements
   ];
