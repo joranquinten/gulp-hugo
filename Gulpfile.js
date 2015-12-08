@@ -97,7 +97,7 @@ gulp.task('css', function() {
   var path = config.env.dev;
   if (!config.settings.isDevelop) path = config.env.prod;
   var base = path.base,
-    ref = config.sourceFiles.css;
+    ref = config.sourceFiles.scss;
 
   if (config.settings.cleanBeforeRun) {
     del([path.dest + config.sourceFiles.css]);
@@ -118,7 +118,7 @@ gulp.task('css', function() {
       }
     }))
     //.pipe(plugins.scssLint(config.plugins.scssLint))
-    //.pipe(plugins.sass())
+    .pipe(plugins.sass())
     .pipe(plugins.concat(config.targetFiles.css))
     //.pipe(plugins.uncss({ html: pathFiles(base, config.sourceFiles.html) })) // UnCSS cleans up unused CSS code, but relies on (static) HTML files in order to extract identifiers, might be interesting for thinning out frameworks.
     .pipe(plugins.postcss(processors)) // ♤ PostCSS ♤
