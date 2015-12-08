@@ -38,12 +38,12 @@ gulp.task('dev:nowatch', function() {
 
 gulp.task('prod', function() {
   config.settings.isDevelop = false;
-  runSequence(['js', 'css', 'html', 'img'], 'serve', 'watch');
+  runSequence(['js', 'css', 'html', 'img', 'usemin'], 'serve', 'watch');
 });
 
 gulp.task('prod:nowatch', function() {
   config.settings.isDevelop = false;
-  runSequence(['js', 'css', 'html', 'img']);
+  runSequence(['js', 'css', 'html', 'img', 'usemin']);
 });
 
 gulp.task('prod:test', function() {
@@ -178,6 +178,32 @@ gulp.task('img', function() {
       use: [pngquant()]
     }))) // Minify only on prod
     .pipe(gulp.dest(path.dest + config.targetFolders.images));
+});
+
+gulp.task('usemin', function() {
+
+  var path = config.env.dev;
+  if (!config.settings.isDevelop) path = config.env.prod;
+  var base = path.base,
+    ref = config.sourceFiles.html;
+
+  if (config.settings.cleanBeforeRun) {
+    del([path.dest + ref]);
+  }
+
+  return gulp.src(pathFiles(base, ref))
+    .pipe(plugins.usemin({
+      css:       [ plugins.minifyCss({ compatibility: 'ie8' }) ],
+      html:      [ function () {return plugins.htmlmin( config.plugins.minifyHTML );} ],
+      js:        [ plugins.uglify ],
+      inlinejs:  [ plugins.uglify ],
+      inlinecss: [ plugins.minifyCss({ compatibility: 'ie8' }) ]
+    }))
+    .pipe(gulp.dest(path.dest + config.targetFolders.html))
+    .pipe(reload({
+      stream: true
+    }));
+
 });
 
 /* **************************************************

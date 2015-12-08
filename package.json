@@ -33,6 +33,7 @@
     "gulp-strip-debug": "^1.1.0",
     "gulp-uglify": "^1.5.1",
     "gulp-uncss": "^1.0.4",
+    "gulp-usemin": "^0.3.16",
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.5",
     "imagemin-pngquant": "^4.2.0",
