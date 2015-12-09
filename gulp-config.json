@@ -1,7 +1,7 @@
 {
   "settings": {
     "isDevelop": true,
-    "cleanBeforeRun": false,
+    "cleanBeforeRun": true,
     "enableGZIP": false,
     "enableUsemin": true
   },
@@ -47,7 +47,7 @@
     "css": "angular/",
     "html": "/",
     "images": "img/",
-    "maps": "../"
+    "maps": "./"
   },
   "targetFiles": {
     "js": "app.js",

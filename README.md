@@ -59,6 +59,16 @@ If npm is not supported, follow these steps to reproduce the installation proces
 
 All of the options are stored in the "gulp-config.json" file. This encompassed source locations, target locations and certain configuration options which target certain plugins. **The "Gulpfile.js" should never have to be edited in order to use this repository for your development or even deployment.**
 
+The structure of the configuration file is as follows: Global options are set in the settings object. These act as switches for certain options within the process.
+The next part describes the location of the environments, source files and output. The plugins object describes the options for each plugin.
+
+Short descrition of the main options:
+- **isDevelop**: triggers minification of assets en determines the output folder (develop or production).
+- **cleanBeforeRun**: deletes the previous output from a certain task.
+- **enableGZIP**: packs assets, server should support GZip when serving content.
+- **transformForAngular**: enables specific transformations of javascript files tailored to the Angular framework.
+
+
 ### Usage
 
 The package is built around three main processes: developing, deploying for production and testing:
@@ -126,7 +136,10 @@ This task is exactly similar to the dev-task. The difference is that the global 
 This task only performs the build actions of the prod task, with no automated browser loading en no watching of files.
 
 #### prod:test
-This tast runs the build process before performing the e2e test. It calls the prod:nowatch task, so no other automated tasks are running in the background.
+This task runs the build process before performing the e2e test. It calls the prod:nowatch task, so no other automated tasks are running in the background.
+
+#### clean:all
+Cleans both development and production environments. This is irreversible. (Calls upon clean:dev and clean:prod.)
 
 ### Task components
 

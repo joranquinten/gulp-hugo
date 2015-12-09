@@ -28,26 +28,30 @@ gulp.task('default', function() {
 
 gulp.task('dev', function() {
   config.settings.isDevelop = true;
-  runSequence(['js', 'css', 'html', 'img'], 'serve', 'watch');
+  runSequence(['clean:dev','js', 'css', 'html', 'img'], 'serve', 'watch');
 });
 
 gulp.task('dev:nowatch', function() {
   config.settings.isDevelop = true;
-  runSequence(['js', 'css', 'html', 'img']);
+  runSequence(['clean:dev','js', 'css', 'html', 'img']);
 });
 
 gulp.task('prod', function() {
   config.settings.isDevelop = false;
-  runSequence(['js', 'css', 'html', 'img', 'usemin'], 'serve', 'watch');
+  runSequence(['clean:prod','js', 'css', 'html', 'img', 'usemin'], 'serve', 'watch');
 });
 
 gulp.task('prod:nowatch', function() {
   config.settings.isDevelop = false;
-  runSequence(['js', 'css', 'html', 'img', 'usemin']);
+  runSequence(['clean:prod','js', 'css', 'html', 'img', 'usemin']);
 });
 
 gulp.task('prod:test', function() {
   runSequence('prod:nowatch', 'e2e');
+});
+
+gulp.task('clean:all', function(){
+  runSequence('clean:dev','clean:prod');
 });
 
 /*
@@ -61,7 +65,8 @@ gulp.task('js', function() {
     ref = config.sourceFiles.js;
 
   if (config.settings.cleanBeforeRun) {
-    del([path.dest + ref]);
+    console.log('deleting: ' + path.dest + config.targetFolders.js + '**/*.js');
+    del(path.dest + config.targetFolders.js + '**/*.js');
   }
   var sourcemaps = require('gulp-sourcemaps');
   var removeUseStrict = require('gulp-remove-use-strict');
@@ -100,7 +105,8 @@ gulp.task('css', function() {
     ref = config.sourceFiles.scss;
 
   if (config.settings.cleanBeforeRun) {
-    del([path.dest + config.sourceFiles.css]);
+      console.log('deleting: ' + path.dest + config.targetFolders.css + '**/*.css');
+      del(path.dest + config.targetFolders.css + '**/*.css');
   }
 
   // Define PostCSS plugins
@@ -140,7 +146,8 @@ gulp.task('html', function() {
     ref = config.sourceFiles.html;
 
   if (config.settings.cleanBeforeRun) {
-    del([path.dest + ref]);
+      console.log('deleting: ' + path.dest + config.targetFolders.html + '**/*.{html,htm,xml,txt}');
+      del(path.dest + config.targetFolders.html + '**/*.{html,htm,xml,txt}');
   }
 
   return gulp.src(pathFiles(base, ref))
@@ -166,7 +173,8 @@ gulp.task('img', function() {
     ref = config.sourceFiles.images;
 
   if (config.settings.cleanBeforeRun) {
-    del([path.dest + ref]);
+      console.log('deleting: ' + path.dest + config.targetFolders.images + '**/*.{gif,png,jpeg,jpg,svg}');
+      del(path.dest + config.targetFolders.images + '**/*.{gif,png,jpeg,jpg,svg}');
   }
 
   return gulp.src(pathFiles(base, ref))
@@ -188,10 +196,6 @@ gulp.task('usemin', function() {
     if (!config.settings.isDevelop) path = config.env.prod;
     var base = path.base,
       ref = config.sourceFiles.html;
-
-    if (config.settings.cleanBeforeRun) {
-      del([path.dest + ref]);
-    }
 
     return gulp.src(pathFiles(base, ref))
       .pipe(plugins.usemin({
@@ -299,11 +303,12 @@ gulp.task('watch', function() {
 });
 
 gulp.task('clean:dev', function() {
-  return del([config.env.dev.dest]);
+  return del(config.env.dev.dest);
 });
 
+
 gulp.task('clean:prod', function() {
-  return del([config.env.prod.dest]);
+  return del(config.env.dev.dest);
 });
 
 /* Other helpers */
