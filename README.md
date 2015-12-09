@@ -66,10 +66,6 @@ Short descrition of the main options:
 - **isDevelop**: triggers minification of assets en determines the output folder (develop or production).
 - **cleanBeforeRun**: deletes the previous output from a certain task.
 - **enableGZIP**: packs assets, server should support GZip when serving content.
-<<<<<<< HEAD
-=======
-- **enableUsemin**: extracts the location of assets and automatically concatenates to a predefined target.
->>>>>>> angularspec
 - **transformForAngular**: enables specific transformations of javascript files tailored to the Angular framework.
 
 
@@ -102,14 +98,9 @@ The package consists of a dozen and more individual plugins. I will address some
 * [browser-sync](http://www.browsersync.io/): synchronizes changes to files directly into the browser. Multiple browsers are possible and input in any browser is synchronized to the other windows.
 * [gulp-filter](https://www.npmjs.com/package/gulp-filter), [gulp-if](https://www.npmjs.com/package/gulp-if), [gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins), [gulp-notify](https://www.npmjs.com/package/gulp-notify), [gulp-plumber](https://www.npmjs.com/package/gulp-plumber) and [gulp-util](https://www.npmjs.com/package/gulp-util) are helpers to simplify the gulpfile and tasks.
 * [gulp-postcss](https://www.npmjs.com/package/gulp-postcss) facilitates the use of PostCSS plugins
-<<<<<<< HEAD
-* [gulp-sass](https://www.npmjs.com/package/gulp-sass) is a wrapper for node-sass, libsass, Sass (in that order) and is a bit delicate with dependencies. Sass and [gulp-scss-lint](https://www.npmjs.com/package/gulp-scss-lint) is used by frameworks such as [Bootstrap](http://getbootstrap.com/) or  [Foundation](http://foundation.zurb.com/). The configuration of the linter is stored in **lint-scss.yml** in the root of the project.
-_Note: Sass linting the may cause an overflow of errors, if imported directly into *.scss_
-=======
 * [gulp-usemin](https://github.com/zont/gulp-usemin) is used to extract file locations from the html and store (and concatenate) these resources locally.
 * [gulp-sass](https://www.npmjs.com/package/gulp-sass) is a wrapper for node-sass, libsass, Sass (in that order) and is therefore a bit delicate with dependencies. Sass and [gulp-scss-lint](https://www.npmjs.com/package/gulp-scss-lint) would be used to set up general styles. Frameworks such as [Bootstrap](http://getbootstrap.com/) and [Foundation](http://foundation.zurb.com/) still make use of Sass as of now.  The configuration of the linter is stored in **lint-scss.yml** in the root of the project.
 _Note: Sass linting the may cause an overflow of errors, when frameworks are imported directly into *.scss_
->>>>>>> usemin
 * All of the Jasmine, Karma, Protractor and Launchers are installed on behalf of the testing tasks. I loosely followed [this article](http://jbavari.github.io/blog/2014/06/11/unit-testing-angularjs-services/) for the unit testing, and [these](http://mherman.org/blog/2015/04/09/testing-angularjs-with-protractor-and-karma-part-1/) [articles](http://mherman.org/blog/2015/04/26/testing-angularjs-with-protractor-and-karma-part-2) for [setting up](http://thejackalofjavascript.com/end-to-end-testing-with-protractor/) the e2e testing.
 
 ---
@@ -127,7 +118,7 @@ These are the tasks which should be called upon, although specific tasks may be 
 This is the task which automatically gets called with the "gulp" command. Fires up the development task (**dev**) by default.
 
 #### dev
-This is the default task, and it assumes that it will involve manipulating the front end assets (js, css, html, images). It runs the develop-build tasks for those components and continues to watch these files for any change.
+This is the default task, and it assumes that it will involve manipulating the front end assets (js, css, html, images). It deletes all previously generated assets and runs the development build tasks for those components and continues to watch these files for any change.
 It also, by default, starts up the browser(s) as defined in the gulp-config.json file.
 
 #### dev:nowatch
@@ -157,7 +148,7 @@ This tasks builds designated Javascript-files, concatenates them and (if product
 The build assumes you will want to end up with only one CSS file and makes no distinction between critical and non critical CSS. (The performance gain is relatively low and it is somewhat difficult to determine which styles should be available directly and which should not.)
 The source are .scss files, which will be linted as sass-files. The sass-files will be transpiled and concatenated to a single CSS-file. The CSS-file is then modified by several PostCSS plugins, which momentarily validate against ie8 or higher. A production specific task will minify the CSS before saving. Any change causes an automatic browser change. The browserSync plugin should only inject edited CSS, not reload the current page, handy!
 
-The CSS task may be modified, it currently contains sort of a hybrid between Sass-compiling and PostCSS modules, especially since PostCSS has very Sass-like capabilities, without the Ruby dependency. [It would probably be more efficient to port Sass-compiling to PostCSS.](http://benfrain.com/breaking-up-with-sass-postcss/)
+The CSS task may be modified, it currently contains sort of a hybrid between Sass-compiling and PostCSS modules, especially since PostCSS has very Sass-like capabilities, without the Ruby dependency. [It might be more efficient to port Sass-compiling to PostCSS.](http://benfrain.com/breaking-up-with-sass-postcss/)
 
 #### html
 This is a fairly simple task: it copies all HTML-like files (html,htm,xml,txt) to the working directory ('dev' or 'prod'). The production task will also minify the HTML files. Any change causes an automatic browser reload.
