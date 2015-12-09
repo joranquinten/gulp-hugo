@@ -3,7 +3,8 @@
     "isDevelop": true,
     "cleanBeforeRun": true,
     "enableGZIP": false,
-    "enableUsemin": true
+    "enableUsemin": true,
+    "transformForAngular": true
   },
   "env": {
     "dev": {

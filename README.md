@@ -66,6 +66,10 @@ Short descrition of the main options:
 - **isDevelop**: triggers minification of assets en determines the output folder (develop or production).
 - **cleanBeforeRun**: deletes the previous output from a certain task.
 - **enableGZIP**: packs assets, server should support GZip when serving content.
+<<<<<<< HEAD
+=======
+- **enableUsemin**: extracts the location of assets and automatically concatenates to a predefined target.
+>>>>>>> angularspec
 - **transformForAngular**: enables specific transformations of javascript files tailored to the Angular framework.
 
 
