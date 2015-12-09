@@ -77,6 +77,7 @@ gulp.task('js', function() {
     .pipe(plugins.jshint(config.plugins.jshintOptions))
     .pipe(plugins.jshint.reporter('jshint-stylish'))
     .pipe(plugins.concat(config.targetFiles.js))
+		.pipe(gulpif(!config.settings.transformForAngular, plugins.ngAnnotate() ))
     .pipe(removeUseStrict())
     .pipe(gulpif(!config.settings.isDevelop, plugins.uglify({
       mangle: true
