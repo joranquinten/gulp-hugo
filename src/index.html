@@ -4,13 +4,50 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My app</title>
-    <script src="js/critical.js"></script>
+
+    <!-- build:css css/assets.css -->
+    <link rel="stylesheet" href="external/assets/normalize.css" />
+    <!-- endbuild -->
+
+    <!-- build:remove -->
+    <script src="external/assets/localhostDependencies.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:inlinejs -->
+    <script src="angular/critical.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:inlinecss -->
+    <!-- endbuild -->
+
     <link rel="stylesheet" href="css/styles.css" />
+
   </head>
   <body>
     <!--
     Insert content here!
     -->
-    <script src="js/app.js"></script>
+    <header>
+
+      This is the header
+
+        <nav>
+
+          This is the navigational part.
+
+        </nav>
+      </header>
+    </header>
+    <footer>
+
+      This is the footer
+
+    </footer>
+    
+    <!-- build:js js/assets.js -->
+    <script src="external/assets/lib.js"></script>
+    <script src="angular/app.js"></script>
+    <!-- endbuild -->
+
   </body>
 </html>

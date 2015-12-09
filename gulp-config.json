@@ -2,7 +2,8 @@
   "settings": {
     "isDevelop": true,
     "cleanBeforeRun": false,
-    "enableGZIP": false
+    "enableGZIP": false,
+    "enableUsemin": true
   },
   "env": {
     "dev": {

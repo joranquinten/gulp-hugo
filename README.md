@@ -16,18 +16,18 @@ The production and development tasks take files as input ('src' folder), process
 
 - [Dependencies](#markdown-header-dependencies)
 - [Installation](#markdown-header-installation)
-  - [Manual](#markdown-header-manual)
+    - [Manual](#markdown-header-manual)
 - [Configuration](#markdown-header-configuration)
 - [Usage](#markdown-header-usage)
-  - [Developing](#markdown-header-developing)
-  - [Testing](#markdown-header-testing)
-  - [Deploying for production](#markdown-header-deploying-for-production)
+    - [Developing](#markdown-header-developing)
+    - [Testing](#markdown-header-testing)
+    - [Deploying for production](#markdown-header-deploying-for-production)
 - [Components](#markdown-header-components)
 - [Tasks](#markdown-header-tasks)
-  - [Main tasks](#markdown-header-main-tasks)
-  - [Task components](#markdown-header-task-components)
-  - [Testing tasks](#markdown-header-testing-tasks)
-  - [Utility tasks](#markdown-header-utility-tasks)
+    - [Main tasks](#markdown-header-main-tasks)
+    - [Task components](#markdown-header-task-components)
+    - [Testing tasks](#markdown-header-testing-tasks)
+    - [Utility tasks](#markdown-header-utility-tasks)
 - [Resources](#markdown-header-resources)
 - [Todo](#markdown-header-todo)
 
@@ -88,8 +88,14 @@ The package consists of a dozen and more individual plugins. I will address some
 * [browser-sync](http://www.browsersync.io/): synchronizes changes to files directly into the browser. Multiple browsers are possible and input in any browser is synchronized to the other windows.
 * [gulp-filter](https://www.npmjs.com/package/gulp-filter), [gulp-if](https://www.npmjs.com/package/gulp-if), [gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins), [gulp-notify](https://www.npmjs.com/package/gulp-notify), [gulp-plumber](https://www.npmjs.com/package/gulp-plumber) and [gulp-util](https://www.npmjs.com/package/gulp-util) are helpers to simplify the gulpfile and tasks.
 * [gulp-postcss](https://www.npmjs.com/package/gulp-postcss) facilitates the use of PostCSS plugins
+<<<<<<< HEAD
 * [gulp-sass](https://www.npmjs.com/package/gulp-sass) is a wrapper for node-sass, libsass, Sass (in that order) and is a bit delicate with dependencies. Sass and [gulp-scss-lint](https://www.npmjs.com/package/gulp-scss-lint) is used by frameworks such as [Bootstrap](http://getbootstrap.com/) or  [Foundation](http://foundation.zurb.com/). The configuration of the linter is stored in **lint-scss.yml** in the root of the project.
 _Note: Sass linting the may cause an overflow of errors, if imported directly into *.scss_
+=======
+* [gulp-usemin](https://github.com/zont/gulp-usemin) is used to extract file locations from the html and store (and concatenate) these resources locally.
+* [gulp-sass](https://www.npmjs.com/package/gulp-sass) is a wrapper for node-sass, libsass, Sass (in that order) and is therefore a bit delicate with dependencies. Sass and [gulp-scss-lint](https://www.npmjs.com/package/gulp-scss-lint) would be used to set up general styles. Frameworks such as [Bootstrap](http://getbootstrap.com/) and [Foundation](http://foundation.zurb.com/) still make use of Sass as of now.  The configuration of the linter is stored in **lint-scss.yml** in the root of the project.
+_Note: Sass linting the may cause an overflow of errors, when frameworks are imported directly into *.scss_
+>>>>>>> usemin
 * All of the Jasmine, Karma, Protractor and Launchers are installed on behalf of the testing tasks. I loosely followed [this article](http://jbavari.github.io/blog/2014/06/11/unit-testing-angularjs-services/) for the unit testing, and [these](http://mherman.org/blog/2015/04/09/testing-angularjs-with-protractor-and-karma-part-1/) [articles](http://mherman.org/blog/2015/04/26/testing-angularjs-with-protractor-and-karma-part-2) for [setting up](http://thejackalofjavascript.com/end-to-end-testing-with-protractor/) the e2e testing.
 
 ---
@@ -141,6 +147,9 @@ This is a fairly simple task: it copies all HTML-like files (html,htm,xml,txt) t
 
 #### img
 The images task takes image-like files (gif,png,jpeg,jpg,svg), minifies them automatically and places them in an 'img' folder.
+
+#### usemin
+This task retrieves files references from certain code blocks within the HTML, which are concatenated, minified and stored within the project.
 
 ### Testing tasks
 

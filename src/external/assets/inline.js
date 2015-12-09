@@ -1,0 +1,1 @@
+var inline = true;
