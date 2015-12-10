@@ -40,7 +40,6 @@ The package needs some additional software to run. Gulp and its plugins are supp
 * [Node.js](https://nodejs.org/en/)
 * [Gulp](https://gulpjs.com) (Install globally via npm: "**npm install gulp -g**")
 * [Selenium Standalone server](http://www.seleniumhq.org/download/) (e2e testing, automated install via Node Package Manager)
-* [Ruby](http://rubyinstaller.org/) 2.2.3-p173-x64 (Sass-compiling, Ruby is optional when replaced with PostCSS modules)
 * [Git](https://git-scm.com/download/win) (optional, for cloning the boilerplate)
 
 ### Installation
@@ -68,6 +67,7 @@ Short descrition of the main options:
 - **enableGZIP**: packs assets, server should support GZip when serving content.
 - **transformForAngular**: enables specific transformations of javascript files tailored to the Angular framework.
 
+The usemin-plugin relies on markup in the index.html file, in order to extract sourcefiles to concatenate and minify. This is applicable for \*.js as wel as \*.css files. Additional information can be found at the [GitHub page](https://github.com/zont/gulp-usemin#blocks).
 
 ### Usage
 
@@ -97,11 +97,13 @@ The package consists of a dozen and more individual plugins. I will address some
 * [autoprefixer](https://github.com/postcss/autoprefixer), [cssgrace](https://github.com/cssdream/cssgrace), [postcss-pseudoelements](https://www.npmjs.com/package/postcss-pseudoelements) are PostCSS modules, which transform plain CSS to match the specifications.
 * [browser-sync](http://www.browsersync.io/): synchronizes changes to files directly into the browser. Multiple browsers are possible and input in any browser is synchronized to the other windows.
 * [gulp-filter](https://www.npmjs.com/package/gulp-filter), [gulp-if](https://www.npmjs.com/package/gulp-if), [gulp-load-plugins](https://www.npmjs.com/package/gulp-load-plugins), [gulp-notify](https://www.npmjs.com/package/gulp-notify), [gulp-plumber](https://www.npmjs.com/package/gulp-plumber) and [gulp-util](https://www.npmjs.com/package/gulp-util) are helpers to simplify the gulpfile and tasks.
-* [gulp-postcss](https://www.npmjs.com/package/gulp-postcss) facilitates the use of PostCSS plugins
+* [gulp-ng-annotate](https://www.npmjs.com/package/gulp-ng-annotate/) is used to automagically inject dependencies for AngularJS, as per suggestion of the [styleguide by John Papa](https://github.com/johnpapa/angular-styleguide#style-y092).
+* [gulp-postcss](https://www.npmjs.com/package/gulp-postcss) facilitates the use of PostCSS plugins.
 * [gulp-usemin](https://github.com/zont/gulp-usemin) is used to extract file locations from the html and store (and concatenate) these resources locally.
 * [gulp-sass](https://www.npmjs.com/package/gulp-sass) is a wrapper for node-sass, libsass, Sass (in that order) and is therefore a bit delicate with dependencies. Sass and [gulp-scss-lint](https://www.npmjs.com/package/gulp-scss-lint) would be used to set up general styles. Frameworks such as [Bootstrap](http://getbootstrap.com/) and [Foundation](http://foundation.zurb.com/) still make use of Sass as of now.  The configuration of the linter is stored in **lint-scss.yml** in the root of the project.
 _Note: Sass linting the may cause an overflow of errors, when frameworks are imported directly into *.scss_
 * All of the Jasmine, Karma, Protractor and Launchers are installed on behalf of the testing tasks. I loosely followed [this article](http://jbavari.github.io/blog/2014/06/11/unit-testing-angularjs-services/) for the unit testing, and [these](http://mherman.org/blog/2015/04/09/testing-angularjs-with-protractor-and-karma-part-1/) [articles](http://mherman.org/blog/2015/04/26/testing-angularjs-with-protractor-and-karma-part-2) for [setting up](http://thejackalofjavascript.com/end-to-end-testing-with-protractor/) the e2e testing.
+*Important note: unit testing of AngularJS components relies on [ngMock](https://docs.angularjs.org/api/ngMock) in order to spoof requests.*
 
 ---
 
@@ -159,6 +161,9 @@ The images task takes image-like files (gif,png,jpeg,jpg,svg), minifies them aut
 #### usemin
 This task retrieves files references from certain code blocks within the HTML, which are concatenated, minified and stored within the project.
 
+#### rev
+The revision task collects external, cacheable assets, adds a revision to the filename, replaces the source in the html file and deletes the unrevisioned assets. This task should be added after generating external assets in order work.
+
 ### Testing tasks
 
 #### unit
@@ -202,6 +207,9 @@ Cleans up the production folder completely, does not generate a new environment.
 ## Todo
 
 * [Replace Sass completely with PostCSS modules](https://pawelgrzybek.com/from-sass-to-postcss/)
+* Relocate config files from root to config folder
+* Define prod or build task
+* zip contents
 * Deploy directly into Cordys
 
 ---

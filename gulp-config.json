@@ -4,6 +4,7 @@
     "cleanBeforeRun": true,
     "enableGZIP": false,
     "enableUsemin": true,
+    "enableRevisioning": true,
     "transformForAngular": true
   },
   "env": {
@@ -31,7 +32,7 @@
       "angular/**/*.css"
     ],
     "html": [
-      "**/*.html"
+      "index.html"
     ],
     "images": "img/**/*.{gif,png,jpeg,jpg,svg}",
     "tests": {
@@ -48,7 +49,8 @@
     "css": "angular/",
     "html": "/",
     "images": "img/",
-    "maps": "./"
+    "maps": "./",
+    "revManifest": "./src/"
   },
   "targetFiles": {
     "js": "app.js",
@@ -104,6 +106,8 @@
         "moment": false,
         "window": false
       }
+    },
+    "revOptions" : {
     }
   }
 }

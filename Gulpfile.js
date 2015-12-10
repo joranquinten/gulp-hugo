@@ -28,30 +28,30 @@ gulp.task('default', function() {
 
 gulp.task('dev', function() {
   config.settings.isDevelop = true;
-  runSequence(['clean:dev','js', 'css', 'html', 'img'], 'serve', 'watch');
+  runSequence('clean:dev', ['js', 'css', 'html', 'img'], ['serve', 'watch']);
 });
 
 gulp.task('dev:nowatch', function() {
   config.settings.isDevelop = true;
-  runSequence(['clean:dev','js', 'css', 'html', 'img']);
+  runSequence('clean:dev', ['js', 'css', 'html', 'img']);
 });
 
 gulp.task('prod', function() {
   config.settings.isDevelop = false;
-  runSequence(['clean:prod','js', 'css', 'html', 'img', 'usemin'], 'serve', 'watch');
+  runSequence('clean:prod', ['js', 'css', 'html', 'img'], 'usemin', 'rev', ['serve', 'watch']);
 });
 
 gulp.task('prod:nowatch', function() {
   config.settings.isDevelop = false;
-  runSequence(['clean:prod','js', 'css', 'html', 'img', 'usemin']);
+  runSequence('clean:prod', ['js', 'css', 'html', 'img'], 'usemin', 'rev');
 });
 
 gulp.task('prod:test', function() {
   runSequence('prod:nowatch', 'e2e');
 });
 
-gulp.task('clean:all', function(){
-  runSequence('clean:dev','clean:prod');
+gulp.task('clean:all', function() {
+  runSequence(['clean:dev', 'clean:prod']);
 });
 
 /*
@@ -82,7 +82,7 @@ gulp.task('js', function() {
     .pipe(plugins.jshint(config.plugins.jshintOptions))
     .pipe(plugins.jshint.reporter('jshint-stylish'))
     .pipe(plugins.concat(config.targetFiles.js))
-		.pipe(gulpif(!config.settings.transformForAngular, plugins.ngAnnotate() ))
+    .pipe(gulpif(!config.settings.transformForAngular, plugins.ngAnnotate()))
     .pipe(removeUseStrict())
     .pipe(gulpif(!config.settings.isDevelop, plugins.uglify({
       mangle: true
@@ -106,8 +106,8 @@ gulp.task('css', function() {
     ref = config.sourceFiles.scss;
 
   if (config.settings.cleanBeforeRun) {
-      console.log('deleting: ' + path.dest + config.targetFolders.css + '**/*.css');
-      del(path.dest + config.targetFolders.css + '**/*.css');
+    console.log('deleting: ' + path.dest + config.targetFolders.css + '**/*.css');
+    del(path.dest + config.targetFolders.css + '**/*.css');
   }
 
   // Define PostCSS plugins
@@ -147,8 +147,8 @@ gulp.task('html', function() {
     ref = config.sourceFiles.html;
 
   if (config.settings.cleanBeforeRun) {
-      console.log('deleting: ' + path.dest + config.targetFolders.html + '**/*.{html,htm,xml,txt}');
-      del(path.dest + config.targetFolders.html + '**/*.{html,htm,xml,txt}');
+    console.log('deleting: ' + path.dest + config.targetFolders.html + '**/*.{html,htm,xml,txt}');
+    del(path.dest + config.targetFolders.html + '**/*.{html,htm,xml,txt}');
   }
 
   return gulp.src(pathFiles(base, ref))
@@ -174,8 +174,8 @@ gulp.task('img', function() {
     ref = config.sourceFiles.images;
 
   if (config.settings.cleanBeforeRun) {
-      console.log('deleting: ' + path.dest + config.targetFolders.images + '**/*.{gif,png,jpeg,jpg,svg}');
-      del(path.dest + config.targetFolders.images + '**/*.{gif,png,jpeg,jpg,svg}');
+    console.log('deleting: ' + path.dest + config.targetFolders.images + '**/*.{gif,png,jpeg,jpg,svg}');
+    del(path.dest + config.targetFolders.images + '**/*.{gif,png,jpeg,jpg,svg}');
   }
 
   return gulp.src(pathFiles(base, ref))
@@ -190,15 +190,19 @@ gulp.task('img', function() {
 });
 
 gulp.task('usemin', function() {
-
   if (config.settings.enableUsemin) {
-
     var path = config.env.dev;
     if (!config.settings.isDevelop) path = config.env.prod;
     var base = path.base,
       ref = config.sourceFiles.html;
 
     return gulp.src(pathFiles(base, ref))
+      .pipe(plugins.plumber({
+        handleError: function(err) {
+          console.log(err);
+          this.emit('end');
+        }
+      }))
       .pipe(plugins.usemin({
         css: [plugins.minifyCss({
           compatibility: 'ie8'
@@ -219,6 +223,72 @@ gulp.task('usemin', function() {
 
   }
 });
+
+gulp.task('rev', ['revision'], function() {
+  if (config.settings.enableRevisioning) {
+
+    var path = config.env.prod.dest;
+    var manifest = gulp.src(config.targetFolders.revManifest + 'rev-manifest.json');
+
+    return gulp.src(path + config.sourceFiles.html)
+      .pipe(plugins.revReplace({
+        manifest: manifest
+      }))
+      .pipe(gulp.dest(path + config.targetFolders.html));
+  }
+});
+
+gulp.task('revision', ['revision:cleanBeforeRun'], function() {
+
+  var path = config.env.prod.dest;
+  var manifest = config.targetFolders.revManifest;
+
+  // Load files to be revisioned
+  return gulp.src(path + '**/*.{css,js}')
+    .pipe(plugins.plumber({
+      handleError: function(err) {
+        console.log(err);
+        this.emit('end');
+      }
+    }))
+    .pipe(plugins.rev())
+    .pipe(gulp.dest(path))
+    .pipe(plugins.rev.manifest())
+    .pipe(gulp.dest(manifest));
+
+});
+
+gulp.task('revision:cleanBeforeRun', function() {
+
+  var path = config.env.prod.dest;
+  var manifest = config.targetFolders.revManifest + 'rev-manifest.json';
+  var manifestFile = null;
+
+  var fs = require('fs');
+  try {
+    file = fs.lstatSync(manifest);
+    if (file.isFile()) {
+      manifestFile = require(manifest);
+    }
+  } catch (e) {
+    notify('Could not open ' + manifest + ' from: ' + __dirname, 'error');
+  }
+
+  if (manifestFile) {
+    notify('Manifest opened, starting to delete files.', 'warning');
+    for (var files in manifestFile) {
+      if (manifestFile.hasOwnProperty(files)) {
+        try {
+          fs.unlink(config.env.prod.dest + manifestFile[files]);
+        } catch (e) {
+          notify('Could not delete: ' + manifestFile[files], 'error');
+        }
+      }
+    }
+  }
+
+});
+
 
 /* **************************************************
  *  Tests                                            *
@@ -309,7 +379,7 @@ gulp.task('clean:dev', function() {
 
 
 gulp.task('clean:prod', function() {
-  return del(config.env.dev.dest);
+  return del(config.env.prod.dest);
 });
 
 /* Other helpers */

@@ -46,3 +46,4 @@ bower_components/
 node_modules/
 dev/
 prod/
+rev-manifest.json
