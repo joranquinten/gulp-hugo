@@ -54,7 +54,8 @@
   },
   "targetFiles": {
     "js": "app.js",
-    "css": "styles.css"
+    "css": "styles.css",
+    "revManifest": "rev-manifest.json"
   },
   "watchFiles": {
     "scss": "scss/**/*.s+(a|c)ss",

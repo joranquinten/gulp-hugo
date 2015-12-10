@@ -253,7 +253,9 @@ gulp.task('revision', ['revision:cleanBeforeRun'], function() {
     }))
     .pipe(plugins.rev())
     .pipe(gulp.dest(path))
-    .pipe(plugins.rev.manifest())
+    .pipe(plugins.rev.manifest({
+      path: config.targetFiles.revManifest
+    }))
     .pipe(gulp.dest(manifest));
 
 });
@@ -261,17 +263,21 @@ gulp.task('revision', ['revision:cleanBeforeRun'], function() {
 gulp.task('revision:cleanBeforeRun', function() {
 
   var path = config.env.prod.dest;
-  var manifest = config.targetFolders.revManifest + 'rev-manifest.json';
+  var manifest = config.targetFolders.revManifest + config.targetFiles.revManifest;
   var manifestFile = null;
 
   var fs = require('fs');
   try {
     file = fs.lstatSync(manifest);
     if (file.isFile()) {
-      manifestFile = require(manifest);
+      try {
+        manifestFile = require(manifest);
+      } catch (e) {
+        notify('Could not open ' + manifest + ' in: ' + __dirname, 'error');
+      }
     }
   } catch (e) {
-    notify('Could not open ' + manifest + ' from: ' + __dirname, 'error');
+    // do nothing
   }
 
   if (manifestFile) {
