@@ -86,7 +86,7 @@ Note: If Selenium is not properly updated via the install process, repeat the co
 
 ### Deploying for production
 
-Production (command: **gulp prod**) should follow the development process and is used to compile the source ('src' folder) to a production environment. The main difference is that all assets will be minified.
+Production (command: **gulp prod** or **gulp prod:deploy**) should follow the development process and is used to compile the source ('src' folder) to a production environment. The main difference is that all assets will be minified. The difference with the ":deploy" suffix is the automated archiving of the output to a \*.zip archive.
 
 ---
 
@@ -132,6 +132,9 @@ This task is exactly similar to the dev-task. The difference is that the global 
 
 #### prod:nowatch
 This task only performs the build actions of the prod task, with no automated browser loading en no watching of files.
+
+#### prod:deploy
+This task is a sibling of the prod:nowatch task: it build a clean production environment and outputs the contents in a \*.zip archive.
 
 #### prod:test
 This task runs the build process before performing the e2e test. It calls the prod:nowatch task, so no other automated tasks are running in the background.
@@ -197,6 +200,12 @@ Cleans up the development folder completely, does not generate a new environment
 #### clean:prod
 Cleans up the production folder completely, does not generate a new environment.
 
+#### clean:zip
+Cleans up the folder storing \*.zip files. Filters on the \*.zip extension automatically.
+
+#### zip
+Takes the contents of a specified folder and zips the contents to an archive. A name can be specified. If none specified, the task defaults to the project name for a filename. In the latter case, a timestamp is added to the archive automagically to avoid naming conflicts.
+
 ---
 
 ## Resources
@@ -215,8 +224,9 @@ Cleans up the production folder completely, does not generate a new environment.
 
 * [Replace Sass completely with PostCSS modules](https://pawelgrzybek.com/from-sass-to-postcss/)
 * Relocate config files from root to config folder
+* Split config into user config
+* Check runSequence of cleaning up
 * Define prod or build task
-* zip contents
 * Deploy directly into Cordys
 
 ---

@@ -46,6 +46,11 @@ gulp.task('prod:nowatch', function() {
   runSequence('clean:prod', ['js', 'css', 'html', 'img'], 'usemin', 'rev');
 });
 
+gulp.task('prod:deploy', function() {
+  config.settings.isDevelop = false;
+  runSequence(['clean:prod','clean:zip'], ['js', 'css', 'html', 'img'], 'usemin', 'rev', 'zip');
+});
+
 gulp.task('prod:test', function() {
   runSequence('prod:nowatch', 'e2e');
 });
@@ -386,6 +391,21 @@ gulp.task('clean:dev', function() {
 
 gulp.task('clean:prod', function() {
   return del(config.env.prod.dest);
+});
+
+gulp.task('clean:zip', function(){
+  return del(config.targetFolders.zip +'**/*.zip');
+});
+
+gulp.task('zip', function(){
+  var targetName = config.targetFiles.zip;
+
+  var rightNow = new Date();
+  var res = rightNow.toISOString().slice(0,17).replace(/-/g,"").replace(/T/g,"").replace(/:/g,"");
+  if (!targetName) targetName = currentDir() + '.'+res+'.zip';
+    return gulp.src(config.sourceFiles.zip)
+        .pipe(plugins.zip(targetName))
+        .pipe(gulp.dest(config.targetFolders.zip));
 });
 
 /* Other helpers */

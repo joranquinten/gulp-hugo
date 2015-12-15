@@ -42,20 +42,23 @@
       "unit": [
         "tests/unit/**/*.js"
       ]
-    }
-  },
+    },
+    "zip" : ["./prod/**/*","!./prod/tests/"]
+    },
   "targetFolders": {
     "js": "angular/",
     "css": "angular/",
     "html": "/",
     "images": "img/",
     "maps": "./",
-    "revManifest": "./src/"
+    "revManifest": "./src/",
+    "zip" : "./zip/"
   },
   "targetFiles": {
     "js": "app.js",
     "css": "styles.css",
-    "revManifest": "rev-manifest.json"
+    "revManifest": "rev-manifest.json",
+    "zip" : null
   },
   "watchFiles": {
     "scss": "scss/**/*.s+(a|c)ss",
