@@ -1,5 +1,5 @@
 require('es6-promise').polyfill();
-var config = require('./gulp-config.json');
+var config = require('./config/gulp-config.json');
 var gulp = require('gulp');
 var plugins = require("gulp-load-plugins")({
   pattern: ['gulp-*', 'gulp.*'],
@@ -129,7 +129,7 @@ gulp.task('css', function() {
         this.emit('end');
       }
     }))
-    //.pipe(plugins.scssLint(config.plugins.scssLint))
+    .pipe(plugins.scssLint(config.plugins.scssLint))
     .pipe(plugins.sass())
     .pipe(plugins.concat(config.targetFiles.css))
     //.pipe(plugins.uncss({ html: pathFiles(base, config.sourceFiles.html) })) // UnCSS cleans up unused CSS code, but relies on (static) HTML files in order to extract identifiers, might be interesting for thinning out frameworks.

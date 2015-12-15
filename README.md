@@ -41,6 +41,7 @@ The package needs some additional software to run. Gulp and its plugins are supp
 * [Gulp](https://gulpjs.com) (Install globally via npm: "**npm install gulp -g**")
 * [Selenium Standalone server](http://www.seleniumhq.org/download/) (e2e testing, automated install via Node Package Manager)
 * [Git](https://git-scm.com/download/win) (optional, for cloning the boilerplate)
+* [Ruby](https://www.ruby-lang.org/en/documentation/installation/) is optional. The package is required solely for linting \*.scss files. gulp-scss-lint depends on Ruby to run. The alternative, gulp-sass-lint does not work with tabs in files. Sass linting is disabled by default.
 
 ### Installation
 
@@ -102,7 +103,7 @@ The package consists of a dozen and more individual plugins. I will address some
 * [gulp-rev](https://github.com/sindresorhus/gulp-rev) is used to generate a cacheable version of assets.
 * [gulp-usemin](https://github.com/zont/gulp-usemin) is used to extract file locations from the html and store (and concatenate) these resources locally.
 * [gulp-sass](https://www.npmjs.com/package/gulp-sass) is a wrapper for node-sass, libsass, Sass (in that order) and is therefore a bit delicate with dependencies. Sass and [gulp-scss-lint](https://www.npmjs.com/package/gulp-scss-lint) would be used to set up general styles. Frameworks such as [Bootstrap](http://getbootstrap.com/) and [Foundation](http://foundation.zurb.com/) still make use of Sass as of now.  The configuration of the linter is stored in **lint-scss.yml** in the root of the project.
-_Note: Sass linting the may cause an overflow of errors, when frameworks are imported directly into *.scss_
+_Note: Sass linting the may cause an overflow of errors, when frameworks are imported directly into \*.scss. Linting is **disabled by default** because of the dependency of Ruby to run._
 * All of the Jasmine, Karma, Protractor and Launchers are installed on behalf of the testing tasks. I loosely followed [this article](http://jbavari.github.io/blog/2014/06/11/unit-testing-angularjs-services/) for the unit testing, and [these](http://mherman.org/blog/2015/04/09/testing-angularjs-with-protractor-and-karma-part-1/) [articles](http://mherman.org/blog/2015/04/26/testing-angularjs-with-protractor-and-karma-part-2) for [setting up](http://thejackalofjavascript.com/end-to-end-testing-with-protractor/) the e2e testing.
 *Important note: unit testing of AngularJS components relies on [ngMock](https://docs.angularjs.org/api/ngMock) in order to spoof requests.*
 

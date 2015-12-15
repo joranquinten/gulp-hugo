@@ -1,7 +1,7 @@
 {
   "settings": {
     "isDevelop": true,
-    "cleanBeforeRun": true,
+    "cleanBeforeRun": false,
     "enableGZIP": false,
     "enableUsemin": true,
     "enableRevisioning": true,
@@ -69,7 +69,7 @@
   },
   "plugins": {
     "scssLint": {
-      "config": "lint-scss.yml"
+      "config": "./config/lint-scss.yml"
     },
     "autoprefixer": {
       "browsers": ["ie 8-10", "Last 2 Chrome versions"]
