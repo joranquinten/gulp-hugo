@@ -45,6 +45,8 @@ Temporary Items
 bower_components/
 node_modules/
 dev/
+develop/
 prod/
+production/
 zip/
 rev-manifest.json

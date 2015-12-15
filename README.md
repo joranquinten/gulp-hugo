@@ -57,15 +57,22 @@ If npm is not supported, follow these steps to reproduce the installation proces
 
 ### Configuration
 
-All of the options are stored in the "gulp-config.json" file. This encompassed source locations, target locations and certain configuration options which target certain plugins. **The "Gulpfile.js" should never have to be edited in order to use this repository for your development or even deployment.**
+All of the options are stored in the "/config/gulp-\*.json" files. These encompass source locations, target locations and certain configuration options which target plugins. **The "Gulpfile.js" should never have to be edited in order to use this repository for your development or even deployment.**
 
-The structure of the configuration file is as follows: Global options are set in the settings object. These act as switches for certain options within the process.
-The next part describes the location of the environments, source files and output. The plugins object describes the options for each plugin.
+The config files are grouped by the following scope:
 
-Short descrition of the main options:
+- **gulp-global.json** contains switches to control some global options within the tasks.
+- **gulp-filemappings.json** stores file references of both source and target locations.
+- **gulp-plugins.json** collects the options by plugin.
+- **gulp-local.json** is used to overrule previous settings for a local development machine.
+
+Short description of the main options:
 - **isDevelop**: triggers minification of assets en determines the output folder (develop or production).
 - **cleanBeforeRun**: deletes the previous output from a certain task.
+- **cleanArchiveBeforeDeploy**: deletes all of the previously generated archives.
 - **enableGZIP**: packs assets, server should support GZip when serving content.
+- **enableUsemin**: retrieves and concatenates assets based upon the marked blocks in the source HTML (see below).
+- **enableRevisioning**: automagically adds a hash to the filenames of assets and updates the source HTML to load the generated filename. This facilitates browser caching and cache busting.
 - **transformForAngular**: enables specific transformations of javascript files tailored to the Angular framework.
 
 The usemin-plugin relies on markup in the index.html file, in order to extract sourcefiles to concatenate and minify. This is applicable for \*.js as wel as \*.css files. Additional information can be found at the [GitHub page](https://github.com/zont/gulp-usemin#blocks).
@@ -102,7 +109,7 @@ The package consists of a dozen and more individual plugins. I will address some
 * [gulp-postcss](https://www.npmjs.com/package/gulp-postcss) facilitates the use of PostCSS plugins.
 * [gulp-rev](https://github.com/sindresorhus/gulp-rev) is used to generate a cacheable version of assets.
 * [gulp-usemin](https://github.com/zont/gulp-usemin) is used to extract file locations from the html and store (and concatenate) these resources locally.
-* [gulp-sass](https://www.npmjs.com/package/gulp-sass) is a wrapper for node-sass, libsass, Sass (in that order) and is therefore a bit delicate with dependencies. Sass and [gulp-scss-lint](https://www.npmjs.com/package/gulp-scss-lint) would be used to set up general styles. Frameworks such as [Bootstrap](http://getbootstrap.com/) and [Foundation](http://foundation.zurb.com/) still make use of Sass as of now.  The configuration of the linter is stored in **lint-scss.yml** in the root of the project.
+* [gulp-sass](https://www.npmjs.com/package/gulp-sass) is a wrapper for node-sass, libsass, Sass (in that order) and is therefore a bit delicate with dependencies. Sass and [gulp-scss-lint](https://www.npmjs.com/package/gulp-scss-lint) would be used to set up general styles. Frameworks such as [Bootstrap](http://getbootstrap.com/) and [Foundation](http://foundation.zurb.com/) still make use of Sass as of now.  The configuration of the linter is stored in **./config/lint-scss.yml** in the root of the project.
 _Note: Sass linting the may cause an overflow of errors, when frameworks are imported directly into \*.scss. Linting is **disabled by default** because of the dependency of Ruby to run._
 * All of the Jasmine, Karma, Protractor and Launchers are installed on behalf of the testing tasks. I loosely followed [this article](http://jbavari.github.io/blog/2014/06/11/unit-testing-angularjs-services/) for the unit testing, and [these](http://mherman.org/blog/2015/04/09/testing-angularjs-with-protractor-and-karma-part-1/) [articles](http://mherman.org/blog/2015/04/26/testing-angularjs-with-protractor-and-karma-part-2) for [setting up](http://thejackalofjavascript.com/end-to-end-testing-with-protractor/) the e2e testing.
 *Important note: unit testing of AngularJS components relies on [ngMock](https://docs.angularjs.org/api/ngMock) in order to spoof requests.*
@@ -224,9 +231,6 @@ Takes the contents of a specified folder and zips the contents to an archive. A 
 ## Todo
 
 * [Replace Sass completely with PostCSS modules](https://pawelgrzybek.com/from-sass-to-postcss/)
-* Relocate config files from root to config folder
-* Split config into user config
-* Check runSequence of cleaning up
 * Define prod or build task
 * Deploy directly into Cordys
 

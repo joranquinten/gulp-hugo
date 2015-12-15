@@ -1,5 +1,10 @@
 require('es6-promise').polyfill();
-var config = require('./config/gulp-config.json');
+
+var confGlobal = require('./config/gulp-global.json');
+var confFileMap = require('./config/gulp-filemappings.json');
+var confPlugins = require('./config/gulp-plugins.json');
+var confLocal = require('./config/gulp-local.json');
+
 var gulp = require('gulp');
 var plugins = require("gulp-load-plugins")({
   pattern: ['gulp-*', 'gulp.*'],
@@ -11,6 +16,10 @@ var gulpif = require('gulp-if');
 var del = require('del');
 var browserSync = require("browser-sync").create();
 var reload = browserSync.reload;
+
+// Monitor cleaning process
+var isCleanedDev = false;
+var isCleanedProd = false;
 
 // Testing plugins
 var karmaServer = require('karma').Server;
@@ -27,28 +36,28 @@ gulp.task('default', function() {
 });
 
 gulp.task('dev', function() {
-  config.settings.isDevelop = true;
+  confGlobal.isDevelop = true;
   runSequence('clean:dev', ['js', 'css', 'html', 'img'], ['serve', 'watch']);
 });
 
 gulp.task('dev:nowatch', function() {
-  config.settings.isDevelop = true;
+  confGlobal.isDevelop = true;
   runSequence('clean:dev', ['js', 'css', 'html', 'img']);
 });
 
 gulp.task('prod', function() {
-  config.settings.isDevelop = false;
+  confGlobal.isDevelop = false;
   runSequence('clean:prod', ['js', 'css', 'html', 'img'], 'usemin', 'rev', ['serve', 'watch']);
 });
 
 gulp.task('prod:nowatch', function() {
-  config.settings.isDevelop = false;
+  confGlobal.isDevelop = false;
   runSequence('clean:prod', ['js', 'css', 'html', 'img'], 'usemin', 'rev');
 });
 
 gulp.task('prod:deploy', function() {
-  config.settings.isDevelop = false;
-  runSequence(['clean:prod','clean:zip'], ['js', 'css', 'html', 'img'], 'usemin', 'rev', 'zip');
+  confGlobal.isDevelop = false;
+  runSequence(['clean:prod', 'clean:zip'], ['js', 'css', 'html', 'img'], 'usemin', 'rev', 'zip');
 });
 
 gulp.task('prod:test', function() {
@@ -64,14 +73,14 @@ Tasks by type
 */
 gulp.task('js', function() {
 
-  var path = config.env.dev;
-  if (!config.settings.isDevelop) path = config.env.prod;
+  var path = confFileMap.env.dev;
+  if (!confGlobal.isDevelop) path = confFileMap.env.prod;
   var base = path.base,
-    ref = config.sourceFiles.js;
+    ref = confFileMap.sourceFiles.js;
 
-  if (config.settings.cleanBeforeRun) {
-    console.log('deleting: ' + path.dest + config.targetFolders.js + '**/*.js');
-    del(path.dest + config.targetFolders.js + '**/*.js');
+  if (confGlobal.cleanBeforeRun) {
+    console.log('deleting: ' + path.dest + confFileMap.targetFolders.js + '**/*.js');
+    del(path.dest + confFileMap.targetFolders.js + '**/*.js');
   }
   var sourcemaps = require('gulp-sourcemaps');
   var removeUseStrict = require('gulp-remove-use-strict');
@@ -84,20 +93,20 @@ gulp.task('js', function() {
       }
     }))
     .pipe(sourcemaps.init())
-    .pipe(plugins.jshint(config.plugins.jshintOptions))
+    .pipe(plugins.jshint(confPlugins.jshintOptions))
     .pipe(plugins.jshint.reporter('jshint-stylish'))
-    .pipe(plugins.concat(config.targetFiles.js))
-    .pipe(gulpif(!config.settings.transformForAngular, plugins.ngAnnotate()))
+    .pipe(plugins.concat(confFileMap.targetFiles.js))
+    .pipe(gulpif(!confGlobal.transformForAngular, plugins.ngAnnotate()))
     .pipe(removeUseStrict())
-    .pipe(gulpif(!config.settings.isDevelop, plugins.uglify({
+    .pipe(gulpif(!confGlobal.isDevelop, plugins.uglify({
       mangle: true
     })))
-    .pipe(gulpif(!config.settings.isDevelop, plugins.stripDebug()))
-    .pipe(gulpif(config.settings.enableGZIP, plugins.gzip(config.plugins.gzipOptions)))
-    .pipe(sourcemaps.write(config.targetFolders.maps, {
+    .pipe(gulpif(!confGlobal.isDevelop, plugins.stripDebug()))
+    .pipe(gulpif(confGlobal.enableGZIP, plugins.gzip(confPlugins.gzipOptions)))
+    .pipe(sourcemaps.write(confFileMap.targetFolders.maps, {
       includeContent: false
     }))
-    .pipe(gulp.dest(path.dest + config.targetFolders.js))
+    .pipe(gulp.dest(path.dest + confFileMap.targetFolders.js))
     .pipe(reload({
       stream: true
     }));
@@ -105,19 +114,19 @@ gulp.task('js', function() {
 
 gulp.task('css', function() {
 
-  var path = config.env.dev;
-  if (!config.settings.isDevelop) path = config.env.prod;
+  var path = confFileMap.env.dev;
+  if (!confGlobal.isDevelop) path = confFileMap.env.prod;
   var base = path.base,
-    ref = config.sourceFiles.scss;
+    ref = confFileMap.sourceFiles.scss;
 
-  if (config.settings.cleanBeforeRun) {
-    console.log('deleting: ' + path.dest + config.targetFolders.css + '**/*.css');
-    del(path.dest + config.targetFolders.css + '**/*.css');
+  if (confGlobal.cleanBeforeRun) {
+    console.log('deleting: ' + path.dest + confFileMap.targetFolders.css + '**/*.css');
+    del(path.dest + confFileMap.targetFolders.css + '**/*.css');
   }
 
   // Define PostCSS plugins
   var processors = [
-    autoprefixer(config.plugins.autoprefixer),
+    autoprefixer(confPlugins.autoprefixer),
     cssgrace,
     pseudoelements
   ];
@@ -129,16 +138,16 @@ gulp.task('css', function() {
         this.emit('end');
       }
     }))
-    .pipe(plugins.scssLint(config.plugins.scssLint))
+    .pipe(plugins.scssLint(confPlugins.scssLint))
     .pipe(plugins.sass())
-    .pipe(plugins.concat(config.targetFiles.css))
-    //.pipe(plugins.uncss({ html: pathFiles(base, config.sourceFiles.html) })) // UnCSS cleans up unused CSS code, but relies on (static) HTML files in order to extract identifiers, might be interesting for thinning out frameworks.
+    .pipe(plugins.concat(confFileMap.targetFiles.css))
+    //.pipe(plugins.uncss({ html: pathFiles(base, confFileMap.sourceFiles.html) })) // UnCSS cleans up unused CSS code, but relies on (static) HTML files in order to extract identifiers, might be interesting for thinning out frameworks.
     .pipe(plugins.postcss(processors)) // ♤ PostCSS ♤
-    .pipe(gulpif(!config.settings.isDevelop, plugins.minifyCss({
+    .pipe(gulpif(!confGlobal.isDevelop, plugins.minifyCss({
       compatibility: 'ie8'
     })))
-    .pipe(gulpif(config.settings.enableGZIP, plugins.gzip(config.plugins.gzipOptions)))
-    .pipe(gulp.dest(path.dest + config.targetFolders.css))
+    .pipe(gulpif(confGlobal.enableGZIP, plugins.gzip(confPlugins.gzipOptions)))
+    .pipe(gulp.dest(path.dest + confFileMap.targetFolders.css))
     .pipe(reload({
       stream: true
     }));
@@ -146,14 +155,14 @@ gulp.task('css', function() {
 
 gulp.task('html', function() {
 
-  var path = config.env.dev;
-  if (!config.settings.isDevelop) path = config.env.prod;
+  var path = confFileMap.env.dev;
+  if (!confGlobal.isDevelop) path = confFileMap.env.prod;
   var base = path.base,
-    ref = config.sourceFiles.html;
+    ref = confFileMap.sourceFiles.html;
 
-  if (config.settings.cleanBeforeRun) {
-    console.log('deleting: ' + path.dest + config.targetFolders.html + '**/*.{html,htm,xml,txt}');
-    del(path.dest + config.targetFolders.html + '**/*.{html,htm,xml,txt}');
+  if (confGlobal.cleanBeforeRun) {
+    console.log('deleting: ' + path.dest + confFileMap.targetFolders.html + '**/*.{html,htm,xml,txt}');
+    del(path.dest + confFileMap.targetFolders.html + '**/*.{html,htm,xml,txt}');
   }
 
   return gulp.src(pathFiles(base, ref))
@@ -163,9 +172,9 @@ gulp.task('html', function() {
         this.emit('end');
       }
     }))
-    .pipe(gulpif(!config.settings.isDevelop, plugins.htmlmin(config.plugins.minifyHTML)))
-    .pipe(gulpif(config.settings.enableGZIP, plugins.gzip(config.plugins.gzipOptions)))
-    .pipe(gulp.dest(path.dest + config.targetFolders.html))
+    .pipe(gulpif(!confGlobal.isDevelop, plugins.htmlmin(confPlugins.minifyHTML)))
+    .pipe(gulpif(confGlobal.enableGZIP, plugins.gzip(confPlugins.gzipOptions)))
+    .pipe(gulp.dest(path.dest + confFileMap.targetFolders.html))
     .pipe(reload({
       stream: true
     }));
@@ -173,33 +182,33 @@ gulp.task('html', function() {
 
 gulp.task('img', function() {
 
-  var path = config.env.dev;
-  if (!config.settings.isDevelop) path = config.env.prod;
+  var path = confFileMap.env.dev;
+  if (!confGlobal.isDevelop) path = confFileMap.env.prod;
   var base = path.base,
-    ref = config.sourceFiles.images;
+    ref = confFileMap.sourceFiles.images;
 
-  if (config.settings.cleanBeforeRun) {
-    console.log('deleting: ' + path.dest + config.targetFolders.images + '**/*.{gif,png,jpeg,jpg,svg}');
-    del(path.dest + config.targetFolders.images + '**/*.{gif,png,jpeg,jpg,svg}');
+  if (confGlobal.cleanBeforeRun) {
+    console.log('deleting: ' + path.dest + confFileMap.targetFolders.images + '**/*.{gif,png,jpeg,jpg,svg}');
+    del(path.dest + confFileMap.targetFolders.images + '**/*.{gif,png,jpeg,jpg,svg}');
   }
 
   return gulp.src(pathFiles(base, ref))
-    .pipe(gulpif(!config.settings.isDevelop, plugins.imagemin({
+    .pipe(gulpif(!confGlobal.isDevelop, plugins.imagemin({
       progressive: true,
       svgoPlugins: [{
         removeViewBox: false
       }],
       use: [pngquant()]
     }))) // Minify only on prod
-    .pipe(gulp.dest(path.dest + config.targetFolders.images));
+    .pipe(gulp.dest(path.dest + confFileMap.targetFolders.images));
 });
 
 gulp.task('usemin', function() {
-  if (config.settings.enableUsemin) {
-    var path = config.env.dev;
-    if (!config.settings.isDevelop) path = config.env.prod;
+  if (confGlobal.enableUsemin) {
+    var path = confFileMap.env.dev;
+    if (!confGlobal.isDevelop) path = confFileMap.env.prod;
     var base = path.base,
-      ref = config.sourceFiles.html;
+      ref = confFileMap.sourceFiles.html;
 
     return gulp.src(pathFiles(base, ref))
       .pipe(plugins.plumber({
@@ -213,7 +222,7 @@ gulp.task('usemin', function() {
           compatibility: 'ie8'
         })],
         html: [function() {
-          return plugins.htmlmin(config.plugins.minifyHTML);
+          return plugins.htmlmin(confPlugins.minifyHTML);
         }],
         js: [plugins.uglify],
         inlinejs: [plugins.uglify],
@@ -221,7 +230,7 @@ gulp.task('usemin', function() {
           compatibility: 'ie8'
         })]
       }))
-      .pipe(gulp.dest(path.dest + config.targetFolders.html))
+      .pipe(gulp.dest(path.dest + confFileMap.targetFolders.html))
       .pipe(reload({
         stream: true
       }));
@@ -230,23 +239,23 @@ gulp.task('usemin', function() {
 });
 
 gulp.task('rev', ['revision'], function() {
-  if (config.settings.enableRevisioning) {
+  if (confGlobal.enableRevisioning) {
 
-    var path = config.env.prod.dest;
-    var manifest = gulp.src(config.targetFolders.revManifest + 'rev-manifest.json');
+    var path = confFileMap.env.prod.dest;
+    var manifest = gulp.src(confFileMap.targetFolders.revManifest + 'rev-manifest.json');
 
-    return gulp.src(path + config.sourceFiles.html)
+    return gulp.src(path + confFileMap.sourceFiles.html)
       .pipe(plugins.revReplace({
         manifest: manifest
       }))
-      .pipe(gulp.dest(path + config.targetFolders.html));
+      .pipe(gulp.dest(path + confFileMap.targetFolders.html));
   }
 });
 
 gulp.task('revision', ['revision:cleanBeforeRun'], function() {
 
-  var path = config.env.prod.dest;
-  var manifest = config.targetFolders.revManifest;
+  var path = confFileMap.env.prod.dest;
+  var manifest = confFileMap.targetFolders.revManifest;
 
   // Load files to be revisioned
   return gulp.src(path + '**/*.{css,js}')
@@ -259,7 +268,7 @@ gulp.task('revision', ['revision:cleanBeforeRun'], function() {
     .pipe(plugins.rev())
     .pipe(gulp.dest(path))
     .pipe(plugins.rev.manifest({
-      path: config.targetFiles.revManifest
+      path: confFileMap.targetFiles.revManifest
     }))
     .pipe(gulp.dest(manifest));
 
@@ -267,35 +276,42 @@ gulp.task('revision', ['revision:cleanBeforeRun'], function() {
 
 gulp.task('revision:cleanBeforeRun', function() {
 
-  var path = config.env.prod.dest;
-  var manifest = config.targetFolders.revManifest + config.targetFiles.revManifest;
-  var manifestFile = null;
+  // if already cleaned, no need to clean up a second time
+  if (!isCleanedProd) {
+    var path = confFileMap.env.prod.dest;
+    var manifest = confFileMap.targetFolders.revManifest + confFileMap.targetFiles.revManifest;
+    var manifestFile = null;
 
-  var fs = require('fs');
-  try {
-    file = fs.lstatSync(manifest);
-    if (file.isFile()) {
-      try {
-        manifestFile = require(manifest);
-      } catch (e) {
-        notify('Could not open ' + manifest + ' in: ' + __dirname, 'error');
-      }
-    }
-  } catch (e) {
-    // do nothing
-  }
 
-  if (manifestFile) {
-    notify('Manifest opened, starting to delete files.', 'warning');
-    for (var files in manifestFile) {
-      if (manifestFile.hasOwnProperty(files)) {
+    var fs = require('fs');
+    try {
+      file = fs.lstatSync(manifest);
+      if (file.isFile()) {
         try {
-          fs.unlink(config.env.prod.dest + manifestFile[files]);
+          manifestFile = require(manifest);
         } catch (e) {
-          notify('Could not delete: ' + manifestFile[files], 'error');
+          notify('Could not open ' + manifest + ' in: ' + __dirname, 'error');
+        }
+      }
+    } catch (e) {
+      // do nothing
+    }
+
+    if (manifestFile) {
+      notify('Manifest opened, starting to delete files.', 'warning');
+      for (var files in manifestFile) {
+        if (manifestFile.hasOwnProperty(files)) {
+          try {
+            fs.unlink(confFileMap.env.prod.dest + manifestFile[files]);
+          } catch (e) {
+            notify('Could not delete: ' + manifestFile[files], 'error');
+          }
         }
       }
     }
+
+  } else {
+    notify('Production environment was already cleaned. Skipping.', 'warning');
   }
 
 });
@@ -309,12 +325,12 @@ gulp.task('unit', function(done) {
 
   notify('Starting unit tests. Note that this follow a watch pattern on testfiles, press Ctrl+C to quit.', 'title');
 
-  var path = config.env.dev;
+  var path = confFileMap.env.dev;
   var base = path.base,
-    ref = config.sourceFiles.tests.unit;
+    ref = confFileMap.sourceFiles.tests.unit;
 
   new karmaServer({
-    configFile: __dirname + config.plugins.karma.configFile,
+    confGlobalFile: __dirname + confPlugins.karma.configFile,
     singleRun: false
   }, done).start();
 
@@ -322,13 +338,13 @@ gulp.task('unit', function(done) {
 
 gulp.task('e2e', function() {
 
-  var path = config.env.dev;
+  var path = confFileMap.env.dev;
   var base = path.base,
-    ref = config.sourceFiles.tests.e2e;
+    ref = confFileMap.sourceFiles.tests.e2e;
 
   gulp.src(pathFiles(base, ref))
     .pipe(protractor({
-      configFile: __dirname + config.plugins.protractor.configFile,
+      confGlobalFile: __dirname + confPlugins.protractor.configFile,
       args: ['--baseUrl', 'http://127.0.0.1:8000']
     }))
     .on('error', function(err) {
@@ -342,70 +358,81 @@ gulp.task('e2e', function() {
 Utilities
 */
 gulp.task('serve', function() {
-  var env = config.env.dev.base;
-  if (!config.settings.isDevelop) env = config.env.prod.base;
+  var env = confFileMap.env.dev.base;
+  if (!confGlobal.isDevelop) env = confFileMap.env.prod.base;
   env = env.replace('./', '');
 
   notify('Serve assumes you have a local webserver running and content is accessible via localhost.', 'title');
   // Assumes you have a local webserver running and content is accessible via localhost by default
 
-  //browserSync.init({server: false, proxy: 'localhost/'+ currentDir() +'/'+ env, browser: config.plugins.browserSync.browsers });
+  var serverUrl, browserList;
+  serverUrl = confPlugins.browserSync.proxy;
+  browserList = confPlugins.browserSync.browsers;
+
+  // Overwrite with local settings is applicable
+  if (confLocal.server) serverUrl = confLocal.server;
+  if (confLocal.browsers) browserList = confLocal.browsers;
+
   browserSync.init({
     server: false,
-    proxy: config.plugins.browserSync.proxy,
-    browser: config.plugins.browserSync.browsers
+    proxy: serverUrl,
+    browser: browserList
   });
 
   // Use static server:
-  // browserSync.init({server: { baseDir: './' }, browser: config.plugins.browserSync.browsers });
+  // browserSync.init({server: { baseDir: './' }, browser: browserList });
 
 });
 
 gulp.task('watch', function() {
 
-  var path = config.env.dev;
+  var path = confFileMap.env.dev;
   var base = path.base;
 
-  plugins.watch(base + '' + config.watchFiles.css, function() {
+  plugins.watch(base + '' + confFileMap.watchFiles.css, function() {
     gulp.run(['css']);
   });
 
-  plugins.watch(base + '' + config.watchFiles.js, function() {
+  plugins.watch(base + '' + confFileMap.watchFiles.js, function() {
     gulp.run(['js']);
   });
 
-  plugins.watch(base + '' + config.watchFiles.html, function() {
+  plugins.watch(base + '' + confFileMap.watchFiles.html, function() {
     gulp.run(['html']);
   });
 
-  plugins.watch(base + '' + config.watchFiles.images, function() {
+  plugins.watch(base + '' + confFileMap.watchFiles.images, function() {
     gulp.run(['img']);
   });
 
 });
 
 gulp.task('clean:dev', function() {
-  return del(config.env.dev.dest);
+  isCleanedDev = true;
+  return del(confFileMap.env.dev.dest);
 });
 
 
 gulp.task('clean:prod', function() {
-  return del(config.env.prod.dest);
+  isCleanedProd = true;
+  return del(confFileMap.env.prod.dest);
 });
 
-gulp.task('clean:zip', function(){
-  return del(config.targetFolders.zip +'**/*.zip');
+gulp.task('clean:zip', function() {
+  if (confGlobal.cleanArchiveBeforeDeploy) {
+    return del(confFileMap.targetFolders.zip + '**/*.zip');
+  }
 });
 
-gulp.task('zip', function(){
-  var targetName = config.targetFiles.zip;
+gulp.task('zip', function() {
+  var targetName = confFileMap.targetFiles.zip;
 
   var rightNow = new Date();
-  var res = rightNow.toISOString().slice(0,17).replace(/-/g,"").replace(/T/g,"").replace(/:/g,"");
-  if (!targetName) targetName = currentDir() + '.'+res+'.zip';
-    return gulp.src(config.sourceFiles.zip)
-        .pipe(plugins.zip(targetName))
-        .pipe(gulp.dest(config.targetFolders.zip));
+  var res = rightNow.toISOString().slice(0, 17).replace(/-/g, "").replace(/T/g, "").replace(/:/g, "");
+  if (!targetName) targetName = currentDir() + '.' + res + '.zip';
+  return gulp.src(confFileMap.sourceFiles.zip)
+    .pipe(plugins.zip(targetName))
+    .pipe(gulp.dest(confFileMap.targetFolders.zip));
 });
 
 /* Other helpers */

@@ -1,0 +1,47 @@
+{
+  "scssLint": {
+    "config": "./config/lint-scss.yml"
+  },
+  "autoprefixer": {
+    "browsers": ["ie 8-10", "Last 2 Chrome versions"]
+  },
+  "minifyCSS": {
+    "compatibility": "ie8"
+  },
+  "minifyHTML": {
+    "collapseWhitespace": true,
+    "removeComments": true,
+    "minifyCSS": true
+  },
+  "gzipOptions": {
+    "append": false,
+    "extension": "gz",
+    "threshold": "1kb",
+    "level": 9
+  },
+  "browserSync": {
+    "proxy": "localhost/cordys/nl-mindef-bop/apitest/portal.html",
+    "browsers": [
+      "chrome"
+    ]
+  },
+  "karma": {
+    "configFile": "/src/tests/unit.karma.conf.js"
+  },
+  "protractor": {
+    "configFile": "/src/tests/e2e.protractor.conf.js"
+  },
+  "jshintOptions": {
+    "node": true,
+    "globals": {
+      "app": false,
+      "angular": false,
+      "$": false,
+      "_": false,
+      "moment": false,
+      "window": false
+    }
+  },
+  "revOptions" : {
+  }
+}
