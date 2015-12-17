@@ -62,7 +62,7 @@ All of the options are stored in the "/config/gulp-\*.json" files. These encompa
 The config files are grouped by the following scope:
 
 - **gulp-global.json** contains switches to control some global options within the tasks.
-- **gulp-filemappings.json** stores file references of both source and target locations.
+- **gulp-filemap.json** stores file references of both source and target locations.
 - **gulp-plugins.json** collects the options by plugin.
 - **gulp-local.json** is used to overrule previous settings for a local development machine.
 
