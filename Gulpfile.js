@@ -1,7 +1,7 @@
 require('es6-promise').polyfill();
 
 var confGlobal = require('./config/gulp-global.json');
-var confFileMap = require('./config/gulp-filemappings.json');
+var confFileMap = require('./config/gulp-filemap.json');
 var confPlugins = require('./config/gulp-plugins.json');
 var confLocal = require('./config/gulp-local.json');
 
