@@ -1,10 +1,10 @@
 {
   "name": "GulpBoilerplate",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git://github.com/joranquinten/gulp-boilerplate.git"
+    "url": "https://bitbucket.org/joranquinten/gulp-boilerplate"
   },
   "devDependencies": {
     "autoprefixer": "^6.1.2",

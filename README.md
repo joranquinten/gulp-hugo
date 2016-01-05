@@ -7,16 +7,17 @@ A barebones, standardized boilerplate for developing and testing a web project.
 
 ## Introduction
 
-This package builds a default environment for front end development on a Windows-machine. This results in some minor changes in relation to online documentation, which is mostly Unix/OS X oriented. The package makes some basic assumptions regarding the use of development tools en task order. It is built upon Gulp and several Node modules.
+This package builds a default environment for front end development on a Windows-machine. This results in some minor changes in relation to available online documentation, which is mostly Unix/OS X oriented. The package makes some basic assumptions regarding the use of development tools en task order. It is built upon Gulp and several Node modules.
 
-The process is built around four main tasks: production, development, unit testing and end to end testing. These tasks call other, more specific tasks.
-The production and development tasks take files as input ('src' folder), process them, and place them in a designated folder. By default, these folders are called 'dev' and 'prod'. These folders are set up in the configuration file 'gulp-config.json' and mirror the folder structure of the 'src' folder.
+The process is built around four main tasks: production, development, testing (unit testing and end to end testing) and deployment. These tasks call other, more specific tasks.
+The production and development tasks take files as input (source folder), process them, and place them in a designated folder. By default, these folders are called 'dev' and 'prod'. These folders are set up in the configuration file 'config/gulp-filemap.json' and mirror the folder structure of the 'src' folder.
 
 ### Contents
 
 - [Dependencies](#markdown-header-dependencies)
 - [Installation](#markdown-header-installation)
     - [Manual](#markdown-header-manual)
+    - [Structure](#markdown-header-gulpfolder)
 - [Configuration](#markdown-header-configuration)
 - [Usage](#markdown-header-usage)
     - [Developing](#markdown-header-developing)
@@ -32,7 +33,6 @@ The production and development tasks take files as input ('src' folder), process
 - [Todo](#markdown-header-todo)
 
 ---
-
 ### Dependencies
 
 The package needs some additional software to run. Gulp and its plugins are supported by Node.js. The rest of the software in this list is needed to perform certain tasks, but no primary tasks and could be neglected, based upon usage.
@@ -49,11 +49,17 @@ After installing the dependencies, installation should be as simple as cloning (
 
 #### Manual
 
-If npm is not supported, follow these steps to reproduce the installation process. This involves manually copying certain folders from a local resource to the development environment.
+If npm is not supported (due to security limitations), follow these steps to reproduce the installation process. This involves manually copying certain folders from a local resource to the development environment.
 
 * Run the default installation (cloning the repository and installing the modules locally)
 * "Install" gulp globally by copying the "npm" folder to the target location: c:\Users\\*%Username%*\AppData\roaming\ (When using a machine as resource, the location would follow the same pattern.)
 * Manually copy the folder "node_modules" from your project folder to the development environment
+
+*Note: Earlier versions than node@3.0.0 used to nest node modules, which makes it nearly impossible to manipulate the node\_modules on Windows. This is fixed in later versions of node. It is recommended to update or install a recent version of node. This repo has been tested on node@4.2.3 and npm@2.14.7 *
+
+#### Gulp-folder
+
+The Gulpfile.js reads contents from seperate files in the "/gulp/"-folder. These are either configuration files or define the tasks which can be executed via the command line. This seperation keeps the Gulpfile as readable as possible. The files in the "/gulp/tasks/"-folder have a naming conventions which corresponds with the task from the Gulpfile. Each task is stored in a separate file.
 
 ### Configuration
 
@@ -62,7 +68,7 @@ All of the options are stored in the "/config/gulp-\*.json" files. These encompa
 The config files are grouped by the following scope:
 
 - **gulp-global.json** contains switches to control some global options within the tasks.
-- **gulp-filemap.json** stores file references of both source and target locations.
+- **gulp-filemappings.json** stores file references of both source and target locations.
 - **gulp-plugins.json** collects the options by plugin.
 - **gulp-local.json** is used to overrule previous settings for a local development machine.
 
@@ -75,7 +81,7 @@ Short description of the main options:
 - **enableRevisioning**: automagically adds a hash to the filenames of assets and updates the source HTML to load the generated filename. This facilitates browser caching and cache busting.
 - **transformForAngular**: enables specific transformations of javascript files tailored to the Angular framework.
 
-The usemin-plugin relies on markup in the index.html file, in order to extract sourcefiles to concatenate and minify. This is applicable for \*.js as wel as \*.css files. Additional information can be found at the [GitHub page](https://github.com/zont/gulp-usemin#blocks).
+The usemin-plugin relies on markup in the index.html file, in order to extract sourcefiles to concatenate and minify. This is applicable for \*.js as well as \*.css files. Additional information can be found at the [GitHub page](https://github.com/zont/gulp-usemin#blocks).
 
 ### Usage
 
@@ -174,25 +180,26 @@ The images task takes image-like files (gif,png,jpeg,jpg,svg), minifies them aut
 This task retrieves files references from certain code blocks within the HTML, which are concatenated, minified and stored within the project.
 
 #### rev
-The main task does nothing more than rename sources, based upon the manifest. This task should be added after generating external assets in order work and depends on two subtasks: revision and revision:cleanBeforeRun.
+This task fires up the depending tasks in the right sequence (see below).
 
-#### revision
-The revision task collects external, cacheable assets, adds a revision to the filename and stores the collection in a manifest.
-
-#### revision:cleanBeforeRun
+#### rev:clean
 This task cleans up earlier output of the rev task. It looks for the manifest and deleted revved files. This task is run first in the complete revisioning process. It prevents earlier revved files to be added to the manifest and be revved another time.
+
+#### rev:revision
+The main task does nothing more than rename sources, based upon the manifest. This task should be added after generating external assets in order work and depends on two subtasks: rev:manifest and rev:clean.
+
+#### rev:manifest
+The revision task collects external, cacheable assets, adds a revision to the filename and stores the collection in a manifest.
 
 ### Testing tasks
 
 #### unit
-This is one to the two types of testing tasks. This task is configured to output its results in the terminal and should therefore be run in a separate terminal (this task should be run in tandem with the 'dev' or 'prod' tasks). The task starts a Karma webserver and custom browser in which the tests are validated. The Karma webserver follows a certain format for the config file. The specific config is found in the 'tests' folder: **unit.karma.conf.js**.
+This is one to the two types of testing tasks. This task is configured to output its results in the terminal and should therefore be run in a separate terminal (this task could be run in tandem with the 'dev' or 'prod' tasks). The task starts a Karma webserver and custom browser in which the tests are validated. The Karma webserver follows a certain format for the config file. The specific config is found in the 'tests' folder: **unit.karma.conf.js**.
 
 At the moment, a PhantomJS browser is used to validate the unit tests. A preconfigured Chrome browser is available, but disabled. The files (both test as javascript files) are being watched continuously and trigger a rerun of the tests on change. The task is configured to support Jasmine.
 
 #### e2e
 This is the end to end testing task. This task fires up a browser and performs instructed user input to validate against the written tests. This is not a task intend for continuous use and should be run before any deployment. The task starts a standalone Selenium server, opens a new browsers and starts automating the test instructions. This plugin follows a certain config file as well, which is located in the 'tests' folder: **e2e.protractor.conf.js**. It is possible to chain the production task with the end to end test, with the command: **gulp prod:test**.
-
-Due to security restraints on my device, I was unable to trigger these tests on Google Chrome and are therefore being triggered via Firefox.
 
 ### Utility tasks
 
@@ -230,8 +237,6 @@ Takes the contents of a specified folder and zips the contents to an archive. A 
 
 ## Todo
 
-* [Replace Sass completely with PostCSS modules](https://pawelgrzybek.com/from-sass-to-postcss/)
-* Define prod or build task
 * Deploy directly into Cordys
 
 ---
