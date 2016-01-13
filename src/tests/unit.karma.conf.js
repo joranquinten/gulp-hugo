@@ -14,7 +14,8 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
-    files: ['../../src/tests/unit/**/*.js'],
+    files: ['./../../../src/tests/unit/**/*.js',
+	'./../../../src/**/*.spec.js'],
 
 
     // list of files to exclude
@@ -35,7 +36,7 @@ module.exports = function(config) {
 
 
     // web server port
-    port: 9876,
+    port: 9854,
 
 
     // enable / disable colors in the output (reporters and logs)
@@ -53,7 +54,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: ['PhantomJS','chrome_without_security'],
 
     customLaunchers: {
         chrome_without_security: { // Prevents certain alerts who interfere with bare testing

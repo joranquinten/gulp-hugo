@@ -1,5 +1,5 @@
 module.exports = function(
-  gulp, confFileMap, confPlugins, notify
+  gulp, confFileMap, confPlugins, notify, fileExists
 ) {
   return function(done) {
     var karmaServer = require('karma').Server;
@@ -11,8 +11,10 @@ module.exports = function(
       ref = confFileMap.sourceFiles.tests.unit;
 
     new karmaServer({
-      confGlobalFile: __dirname + confPlugins.karma.configFile,
-      singleRun: false
+      configFile: __dirname + confPlugins.karma.configFile,
+      files: ref,
+      browsers: confPlugins.karma.browsers,
+      singleRun: true
     }, done).start();
   };
 };

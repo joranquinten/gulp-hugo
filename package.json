@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.1.2",
+    "bardjs": "^0.1.8",
     "browser-sync": "^2.10.1",
     "cssgrace": "^3.0.0",
     "del": "^2.2.0",

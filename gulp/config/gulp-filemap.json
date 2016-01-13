@@ -32,7 +32,8 @@
         "tests/e2e/**/*.js"
       ],
       "unit": [
-        "tests/unit/**/*.js"
+        "../../../src/tests/unit/**/*.js",
+    	   "../../../src/**/*.spec.js"
       ]
     },
     "zip": ["./production/**/*"]

@@ -26,10 +26,11 @@
     ]
   },
   "karma": {
-    "configFile": "/src/tests/unit.karma.conf.js"
+    "configFile": "\\plugins\\unit.karma.conf.js",
+    "browsers": ["PhantomJS"]
   },
   "protractor": {
-    "configFile": "/src/tests/e2e.protractor.conf.js"
+    "configFile": "./src/tests/e2e.protractor.conf.js"
   },
   "jshintOptions": {
     "node": true,

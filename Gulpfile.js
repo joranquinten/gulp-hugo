@@ -75,6 +75,21 @@ var pathFiles = function(base, collection) {
   }
 };
 
+var fileExists = function(filepath){
+  var fs = require('fs');
+  try {
+    file = fs.lstatSync(filepath);
+    if (file.isFile()) {
+      try {
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+  } catch (e) {return false;
+  }
+};
+
 /* ****************************************************************************************************
 *                                                                                                     *
 *  MAIN TASKS                                                                                         *
