@@ -1,7 +1,9 @@
 module.exports = function(
-  gulp, runSequence
+  gulp, confGlobal, runSequence
 ) {
   return function() {
-    runSequence('rev:clean','rev:revision','rev:manifest');
+    if (confGlobal.enableRevisioning) {
+		runSequence('rev:clean','rev:revision','rev:manifest');
+	}
   };
 };

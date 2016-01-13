@@ -103,10 +103,10 @@ gulp.task('html',          require('./gulp/tasks/html.js')           (gulp, plug
 gulp.task('img',           require('./gulp/tasks/img.js')            (gulp, plugins, confGlobal, confFileMap, gulpif, pathFiles));
 
 /* Additional transforming */
-gulp.task('usemin',        require('./gulp/tasks/usemin.js')         (gulp, plugins, confGlobal, confFileMap, confPlugins, pathFiles, reload));
-gulp.task('rev',           require('./gulp/tasks/rev.js')            (gulp, runSequence));
-gulp.task('rev:clean',     require('./gulp/tasks/rev-clean.js')      (gulp, confFileMap, notify, isCleanedProd));
-gulp.task('rev:revision',  require('./gulp/tasks/rev-revision.js')   (gulp, plugins, confFileMap));
+gulp.task('useref',        require('./gulp/tasks/useref.js')         (gulp, plugins, confGlobal, confFileMap, confPlugins, pathFiles, reload, gulpif));
+gulp.task('rev',           require('./gulp/tasks/rev.js')            (gulp, confGlobal, runSequence));
+gulp.task('rev:clean',     require('./gulp/tasks/rev-clean.js')      (gulp, confGlobal, confFileMap, notify, isCleanedProd));
+gulp.task('rev:revision',  require('./gulp/tasks/rev-revision.js')   (gulp, plugins, confGlobal, confFileMap));
 gulp.task('rev:manifest',  require('./gulp/tasks/rev-manifest.js')   (gulp, plugins, confGlobal, confFileMap));
 
 /* Tests */

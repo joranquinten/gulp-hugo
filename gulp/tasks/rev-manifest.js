@@ -6,7 +6,7 @@ module.exports = function(
 
       var path = confFileMap.env.prod.dest;
       var manifest = gulp.src(confFileMap.targetFolders.revManifest + 'rev-manifest.json');
-
+	  
       return gulp.src(path + confFileMap.sourceFiles.html)
         .pipe(plugins.revReplace({
           manifest: manifest

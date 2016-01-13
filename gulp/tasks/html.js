@@ -19,7 +19,7 @@ module.exports = function(
           this.emit('end');
         }
       }))
-      .pipe(gulpif(!confGlobal.isDevelop, plugins.htmlmin(confPlugins.minifyHTML)))
+      //.pipe(gulpif(!confGlobal.isDevelop, plugins.htmlmin(confPlugins.minifyHTML)))
       .pipe(gulpif(confGlobal.enableGZIP, plugins.gzip(confPlugins.gzipOptions)))
       .pipe(gulp.dest(path.dest + confFileMap.targetFolders.html))
       .pipe(reload({

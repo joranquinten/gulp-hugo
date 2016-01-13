@@ -3,6 +3,6 @@ module.exports = function(
 ) {
   return function() {
     confGlobal.isDevelop = false;
-    runSequence('clean:prod', ['js', 'css', 'html', 'img'], 'usemin', 'rev', ['serve', 'watch']);
+    runSequence('clean:prod', ['js', 'css', 'img'], 'html', 'useref', 'rev', ['serve', 'watch']);
   };
 };

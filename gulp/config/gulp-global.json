@@ -1,8 +1,9 @@
 {
-    "isDevelop": true,
+    "isDevelop": false,
     "cleanBeforeRun": false,
     "cleanArchiveBeforeDeploy" : false,
     "enableGZIP": false,
+    "enableUseref": true,
     "enableRevisioning": true,
     "transformForAngular": true
 }
