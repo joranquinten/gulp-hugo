@@ -103,6 +103,7 @@ gulp.task('default', function() {
 
 gulp.task('dev',           require('./gulp/tasks/dev.js')            (gulp, confGlobal, runSequence));
 gulp.task('dev:nowatch',   require('./gulp/tasks/dev-nowatch.js')    (gulp, confGlobal, runSequence));
+gulp.task('dev:package',   require('./gulp/tasks/dev-package.js')    (gulp, plugins, confGlobal, confFileMap, notify, gulpif));
 
 gulp.task('prod',          require('./gulp/tasks/prod.js')           (gulp, confGlobal, runSequence));
 gulp.task('prod:nowatch',  require('./gulp/tasks/prod-nowatch.js')   (gulp, confGlobal, runSequence));

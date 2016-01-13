@@ -38,6 +38,9 @@
     },
     "zip": ["./production/**/*"]
   },
+  "sourceFolders": {
+    "packages" : "./src/modules"
+  },
   "targetFolders": {
     "js": "angular/",
     "css": "angular/",

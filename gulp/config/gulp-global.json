@@ -1,6 +1,7 @@
 {
     "isDevelop": true,
     "cleanBeforeRun": false,
+    "packageModules" : true,
     "cleanArchiveBeforeDeploy" : false,
     "enableGZIP": false,
     "enableRevisioning": true,
