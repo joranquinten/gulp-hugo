@@ -43,6 +43,7 @@
     "gulp-zip": "^3.0.2",
     "imagemin-pngquant": "^4.2.0",
     "jasmine-core": "^2.3.4",
+    "jasmine-reporters": "^2.1.1",
     "jshint-stylish": "^2.1.0",
     "karma": "^0.13.15",
     "karma-chrome-launcher": "^0.2.1",
