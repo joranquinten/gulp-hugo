@@ -18,7 +18,7 @@ module.exports = function(
       // get all *.js files, excluding *.spec.js & *.package.js
       subFolders.forEach(function(folderName) {
         var currentFolder = sourceFolder + '/' + folderName;
-        // concat to targetname = sourcefolder.package.js
+        // concat to targetname = sourcefolder.package.js, filter out certain files
         gulp.src([currentFolder + '/**/*.js', '!' + currentFolder + '/**/*.spec.js', '!' + currentFolder + '/**/*'+ postFix +'.js'])
           .pipe(plugins.concat(folderName + postFix + '.js'))
           .pipe(gulpif(!confGlobal.transformForAngular, plugins.ngAnnotate()))
