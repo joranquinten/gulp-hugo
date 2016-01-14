@@ -54,7 +54,8 @@
     "js": "app.js",
     "css": "styles.css",
     "revManifest": "rev-manifest.json",
-    "zip": null
+    "zip": null,
+    "packagePostfix": "package"
   },
   "watchFiles": {
     "scss": "scss/**/*.s+(a|c)ss",

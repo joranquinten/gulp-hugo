@@ -7,6 +7,7 @@ module.exports = function(
 
       // get sourcefolder
       var sourceFolder = confFileMap.sourceFolders.packages;
+      var postFix = '.'+ confFileMap.targetFiles.packagePostfix;
 
       // get each subfolder of sourcefolder
       var fs = require("fs"),
@@ -18,8 +19,8 @@ module.exports = function(
       subFolders.forEach(function(folderName) {
         var currentFolder = sourceFolder + '/' + folderName;
         // concat to targetname = sourcefolder.package.js
-        gulp.src([currentFolder + '/**/*.js', '!' + currentFolder + '/**/*.spec.js', '!' + currentFolder + '/**/*.package.js'])
-          .pipe(plugins.concat(folderName + '.package.js'))
+        gulp.src([currentFolder + '/**/*.js', '!' + currentFolder + '/**/*.spec.js', '!' + currentFolder + '/**/*'+ postFix +'.js'])
+          .pipe(plugins.concat(folderName + postFix + '.js'))
           .pipe(gulpif(!confGlobal.transformForAngular, plugins.ngAnnotate()))
           .pipe(removeUseStrict())
           .pipe(gulpif(!confGlobal.isDevelop, plugins.uglify({
