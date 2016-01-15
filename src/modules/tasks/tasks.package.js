@@ -1,2 +1,1 @@
-var controller;
-var route;
+var controller,route;

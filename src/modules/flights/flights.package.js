@@ -1,4 +1,1 @@
-var controllerDetail;
-var routeDetail;
-var controller;
-var route;
+var controllerDetail,routeDetail,controller,route;

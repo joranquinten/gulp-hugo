@@ -48,7 +48,8 @@
     "images": "img/",
     "maps": "./",
     "revManifest": "./src/",
-    "zip": "./zip/"
+    "zip": "./zip/",
+    "packages" : "modules/"
   },
   "targetFiles": {
     "js": "app.js",

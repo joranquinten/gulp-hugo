@@ -77,11 +77,11 @@ Short description of the main options:
 - **cleanBeforeRun**: deletes the previous output from a certain task.
 - **cleanArchiveBeforeDeploy**: deletes all of the previously generated archives.
 - **enableGZIP**: packs assets, server should support GZip when serving content.
-- **enableUsemin**: retrieves and concatenates assets based upon the marked blocks in the source HTML (see below).
+- **enableUseref**: retrieves and concatenates assets based upon the marked blocks in the source HTML (see below).
 - **enableRevisioning**: automagically adds a hash to the filenames of assets and updates the source HTML to load the generated filename. This facilitates browser caching and cache busting.
 - **transformForAngular**: enables specific transformations of javascript files tailored to the Angular framework.
 
-The usemin-plugin relies on markup in the index.html file, in order to extract sourcefiles to concatenate and minify. This is applicable for \*.js as well as \*.css files. Additional information can be found at the [GitHub page](https://github.com/zont/gulp-usemin#blocks).
+The useref-plugin relies on markup in the index.html file, in order to extract sourcefiles to concatenate and minify. This is applicable for \*.js as well as \*.css files. Additional information can be found at the [GitHub page](https://github.com/zont/gulp-usemin#blocks).
 
 ### Usage
 
@@ -114,7 +114,7 @@ The package consists of a dozen and more individual plugins. I will address some
 * [gulp-ng-annotate](https://www.npmjs.com/package/gulp-ng-annotate/) is used to automagically inject dependencies for AngularJS, as per suggestion of the [styleguide by John Papa](https://github.com/johnpapa/angular-styleguide#style-y092).
 * [gulp-postcss](https://www.npmjs.com/package/gulp-postcss) facilitates the use of PostCSS plugins.
 * [gulp-rev](https://github.com/sindresorhus/gulp-rev) is used to generate a cacheable version of assets.
-* [gulp-usemin](https://github.com/zont/gulp-usemin) is used to extract file locations from the html and store (and concatenate) these resources locally.
+* [gulp-useref](https://github.com/jonkemp/gulp-useref) is used to extract file locations from the html and store (and concatenate) these resources locally.
 * [gulp-sass](https://www.npmjs.com/package/gulp-sass) is a wrapper for node-sass, libsass, Sass (in that order) and is therefore a bit delicate with dependencies. Sass and [gulp-scss-lint](https://www.npmjs.com/package/gulp-scss-lint) would be used to set up general styles. Frameworks such as [Bootstrap](http://getbootstrap.com/) and [Foundation](http://foundation.zurb.com/) still make use of Sass as of now.  The configuration of the linter is stored in **./config/lint-scss.yml** in the root of the project.
 _Note: Sass linting the may cause an overflow of errors, when frameworks are imported directly into \*.scss. Linting is **disabled by default** because of the dependency of Ruby to run._
 * All of the Jasmine, Karma, Protractor and Launchers are installed on behalf of the testing tasks. I loosely followed [this article](http://jbavari.github.io/blog/2014/06/11/unit-testing-angularjs-services/) for the unit testing, and [these](http://mherman.org/blog/2015/04/09/testing-angularjs-with-protractor-and-karma-part-1/) [articles](http://mherman.org/blog/2015/04/26/testing-angularjs-with-protractor-and-karma-part-2) for [setting up](http://thejackalofjavascript.com/end-to-end-testing-with-protractor/) the e2e testing.
@@ -176,7 +176,7 @@ This is a fairly simple task: it copies all HTML-like files (html,htm,xml,txt) t
 #### img
 The images task takes image-like files (gif,png,jpeg,jpg,svg), minifies them automatically and places them in an 'img' folder.
 
-#### usemin
+#### useref
 This task retrieves files references from certain code blocks within the HTML, which are concatenated, minified and stored within the project.
 
 #### rev

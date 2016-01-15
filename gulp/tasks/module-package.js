@@ -3,6 +3,10 @@ module.exports = function(
 ) {
   return function() {
     if (confGlobal.packageModules) {
+
+      var path = confFileMap.env.dev;
+      if (!confGlobal.isDevelop) path = confFileMap.env.prod;
+
       var removeUseStrict = require('gulp-remove-use-strict');
 
       // get sourcefolder
@@ -11,13 +15,16 @@ module.exports = function(
 
       // get each subfolder of sourcefolder
       var fs = require("fs"),
-        path = require("path");
+          fPath = require("path");
 
       var subFolders = getDirectories(sourceFolder);
 
       // get all *.js files, excluding *.spec.js & *.package.js
       subFolders.forEach(function(folderName) {
+
         var currentFolder = sourceFolder + '/' + folderName;
+        var targetFolder = confFileMap.targetFolders.packages;
+
         // concat to targetname = sourcefolder.package.js, filter out certain files
         gulp.src([currentFolder + '/**/*.js', '!' + currentFolder + '/**/*.spec.js', '!' + currentFolder + '/**/*'+ postFix +'.js'])
           .pipe(plugins.concat(folderName + postFix + '.js'))
@@ -26,7 +33,7 @@ module.exports = function(
           .pipe(gulpif(!confGlobal.isDevelop, plugins.uglify({
             mangle: true
           })))
-          .pipe(gulp.dest(currentFolder));
+          .pipe(gulp.dest(path.dest + targetFolder + folderName + '/'));
       });
 
     } else {
@@ -35,7 +42,7 @@ module.exports = function(
 
     function getDirectories(p) {
       return fs.readdirSync(p).filter(function(file) {
-        return fs.statSync(path.join(p, file)).isDirectory();
+        return fs.statSync(fPath.join(p, file)).isDirectory();
       });
     }
   };
