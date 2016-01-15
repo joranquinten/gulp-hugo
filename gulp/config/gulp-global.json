@@ -1,10 +1,10 @@
 {
     "isDevelop": false,
     "cleanBeforeRun": false,
-    "packageModules" : true,
     "cleanArchiveBeforeDeploy" : false,
     "enableGZIP": false,
     "enableUseref": true,
     "enableRevisioning": true,
+    "packageModules" : true,
     "transformForAngular": true
 }
