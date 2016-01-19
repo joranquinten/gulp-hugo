@@ -50,4 +50,4 @@ prod/
 production/
 zip/
 rev-manifest.json
-.zip
+*.zip
