@@ -82,7 +82,7 @@ Short description of the main options:
 - **packageModules**: packages the source javascript files of app modules and stores the files in a concatenated (minified for production) \*.js file.
 - **transformForAngular**: enables specific transformations of javascript files tailored to the Angular framework.
 
-The useref-plugin relies on markup in the index.html file, in order to extract sourcefiles to concatenate and minify. This is applicable for \*.js as well as \*.css files. Additional information can be found at the [GitHub page](https://github.com/zont/gulp-usemin#blocks).
+The useref-plugin relies on markup in the index.html file, in order to extract sourcefiles to concatenate and minify. This is applicable for \*.js as well as \*.css files. Additional information can be found at the [GitHub page](https://github.com/jonkemp/gulp-useref).
 
 ### Usage
 
@@ -91,11 +91,11 @@ The package is built around three main processes: developing, deploying for prod
 ### Developing
 
 During development, you should have the 'dev' task running (command: **gulp dev**). This will monitor changes you make to files and trigger the browsersync process, to reflect your changes. Javascript and Sass files will be linted on the fly, but will be compiled in the same task.
-When unit tests are written, you probably want another terminal open, in which you run the unit tests during development (command: **gulp unit**). Any new files added to the structure, require a restart of the 'dev' task. Preferably, unit testing is embedded in the development process.
+When unit tests are written, you probably want another terminal open, in which you run the unit tests during development (command: **gulp test:unit**). Any new files added to the structure, require a restart of the 'dev' task. Preferably, unit testing is embedded in the development process.
 
 ### Testing
 
-Besides the unit testing, the protractor plugin allows running end to end tests. These should not have to be run in tandem with a development process, but will serve as a automated test before any deployment (command: **gulp e2e**).
+Besides the unit testing, the protractor plugin allows running end to end tests. These should not have to be run in tandem with a development process, but will serve as a automated test before any deployment (command: **gulp test:e2e**).
 
 Note: If Selenium is not properly updated via the install process, repeat the command in the terminal: **node node_modules/protractor/bin/webdriver-manager update**. A standalone .jar file should be stored in /node_modules/protractor/selenium/.
 
@@ -125,7 +125,9 @@ _Note: Sass linting the may cause an overflow of errors, when frameworks are imp
 
 ## Tasks (order of appearance)
 
-The configuration file should make it easier to modify the input, output and options of the tasks. Each task which touches files, addresses them via a function (pathFiles), which joins the base-folder with the separate filenames.
+The configuration file should make it easier to modify the input, output and options of the tasks. Tasks are stored in the gulp\tasks folder and are accessed through the Gulpfile.
+Each task which touches files, addresses them via a function (pathFiles), which joins the base-folder with the separate filenames.
+
 _Note: tasks by default do not track the creation or deletion of files!_
 
 ### Main tasks
@@ -178,7 +180,7 @@ The CSS task may be modified, it currently contains sort of a hybrid between Sas
 This is a fairly simple task: it copies all HTML-like files (html,htm,xml,txt) to the working directory ('dev' or 'prod', stored in "gulp-filemap.json"). The production task will also minify the HTML files. Any change causes an automatic browser reload.
 
 #### img
-The images task takes image-like files (gif,png,jpeg,jpg,svg), minifies them automatically and places them in an 'img' folder.
+The images task takes image-like files (based on extension), minifies them automatically and places them in a target folder.
 
 #### useref
 This task retrieves files references from certain code blocks within the HTML, which are concatenated, minified and stored within the project.
@@ -187,43 +189,43 @@ This task retrieves files references from certain code blocks within the HTML, w
 This task fires up the depending tasks in the right sequence (see below).
 
 #### rev:clean
-This task cleans up earlier output of the rev task. It looks for the manifest and deleted revved files. This task is run first in the complete revisioning process. It prevents earlier revved files to be added to the manifest and be revved another time.
+This task cleans up earlier output of the rev task. It looks for the manifest and deletes previously revved files. This task is run first in the complete revisioning process. It prevents earlier revved files to be added to the manifest and be revved another time.
 
 #### rev:revision
 The main task does nothing more than rename sources, based upon the manifest. This task should be added after generating external assets in order work and depends on two subtasks: rev:manifest and rev:clean.
 
 #### rev:manifest
-The revision task collects external, cacheable assets, adds a revision to the filename and stores the collection in a manifest.
+The revision task collects external, cacheable assets, adds a revision to the filename and stores the collection in a manifest file.
 
 ### Testing tasks
 
-#### unit
-This is one to the two types of testing tasks. This task is configured to output its results in the terminal and should therefore be run in a separate terminal (this task could be run in tandem with the 'dev' or 'prod' tasks). The task starts a Karma webserver and custom browser in which the tests are validated. The Karma webserver follows a certain format for the config file. The specific config is found in the 'tests' folder: **unit.karma.conf.js**.
+#### test:unit
+This is one to the two types of testing tasks. This task is configured to output its results in the terminal and should therefore be run in a separate terminal (this task could be run in tandem with the 'dev' or 'prod' tasks). The task starts a Karma webserver and custom browser in which the tests are validated. The Karma webserver follows a certain format for the config file. The specific config is found in the 'gulp\tasks\plugins\' folder: **unit.karma.conf.js**.
 
-At the moment, a PhantomJS browser is used to validate the unit tests. A preconfigured Chrome browser is available, but disabled. The files (both test as javascript files) are being watched continuously and trigger a rerun of the tests on change. The task is configured to support Jasmine.
+At the moment, a (headless) PhantomJS browser is used to validate the unit tests. A preconfigured Chrome browser is available, but disabled. The files containing the tests are being watched continuously and trigger a rerun of the tests on change. The task is configured to support Jasmine.
 
-#### e2e
-This is the end to end testing task. This task fires up a browser and performs instructed user input to validate against the written tests. This is not a task intend for continuous use and should be run before any deployment. The task starts a standalone Selenium server, opens a new browsers and starts automating the test instructions. This plugin follows a certain config file as well, which is located in the 'tests' folder: **e2e.protractor.conf.js**. It is possible to chain the production task with the end to end test, with the command: **gulp prod:test**.
+#### test:e2e
+This is the end to end testing task. This task fires up a browser and performs instructed user input to validate against the written tests. This is not a task intended for continuous use and should be run before any deployment. The task starts a standalone Selenium server, opens a new browsers and starts automating the test instructions. This plugin follows a certain config file as well, which is located in the 'tests' folder: **e2e.protractor.conf.js**. It is possible to chain the production task with the end to end test, with the command: **gulp prod:test**.
 
 ### Utility tasks
 
 #### serve
-This task facilitates the browserSync plugin. The current setup assumes a local webserver is already in place. BrowserSync could also be configured to act as as standalone webserver for static files (disabled, but visible in the Gulpfile.js).
+This task facilitates the browserSync plugin. The current setup assumes a **local webserver** is already in place. BrowserSync could also be configured to act as as standalone webserver for static files (disabled via comments in the Gulpfile.js).
 
 #### watch
-The watch task defines which files are being watched by the taskrunner and what action should be triggers on change. The task is configured to trigger the 'js', 'css', 'html' or 'img' task, corresponding to a file change within the scope of these tasks.
+The watch task defines which files are being watched by the taskrunner and what action should be triggered on change. The task is configured to trigger the 'js', 'css', 'html' or 'img' task, corresponding to a file change within the scope of these tasks.
 
 #### clean:dev
-Cleans up the development folder completely, does not generate a new environment.
+Cleans up (read: deletes) the development folder completely, does not generate a new environment.
 
 #### clean:prod
 Cleans up the production folder completely, does not generate a new environment.
 
 #### clean:zip
-Cleans up the folder storing \*.zip files. Filters on the \*.zip extension automatically.
+Cleans up the files in the folder storing the generated \*.zip files. Filters on the \*.zip extension automatically.
 
 #### zip
-Takes the contents of a specified folder and zips the contents to an archive. A name can be specified. If none specified, the task defaults to the project name for a filename. In the latter case, a timestamp is added to the archive automagically to avoid naming conflicts.
+Takes the contents of a specified folder and zips those to an archive. A spe archive name can be specified. If none specified, the task defaults to the project name (main folder) for a filename. In the latter case, a timestamp is added to avoid naming conflicts.
 
 ---
 
