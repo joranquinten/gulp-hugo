@@ -34,20 +34,10 @@ gulp.task('dev', function(){
 
 gulp.task('dev:nowatch', function(){
   confGlobal.isDevelop = true;
-  runSequence(['js','css','copy:assets'], 'hugo:server');
-});
-
-gulp.task('dev:single', function(){
-  confGlobal.isDevelop = true;
-  runSequence(['js','css','copy:assets']);
+  runSequence(['js','css','copy:assets'], 'hugo:server:nowatch');
 });
 
 gulp.task('prod', function(){
-    confGlobal.isDevelop = false;
-	runSequence('clean', ['js','css','copy:assets:minify'], 'css:clean', 'hugo:build');
-});
-
-gulp.task('prod:single', function(){
     confGlobal.isDevelop = false;
 	runSequence('clean', ['js','css','copy:assets:minify'], 'css:clean', 'hugo:build');
 });
@@ -156,7 +146,11 @@ gulp.task('clean', function(){
 });
 	
 gulp.task('hugo:server', plugins.shell.task([
-    'hugo server -D=true'
+    'hugo server'
+]));
+	
+gulp.task('hugo:server:nowatch', plugins.shell.task([
+    'hugo server -w=false'
 ]));
 	
 gulp.task('hugo:build', plugins.shell.task([
