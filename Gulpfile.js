@@ -71,8 +71,8 @@ gulp.task('js', function(){
       .pipe(gulpif(!confGlobal.isDevelop, plugins.uglify({ mangle: true })))
       .pipe(gulpif(!confGlobal.isDevelop, plugins.stripDebug()))
       .pipe(gulpif(confGlobal.enableGZIP, plugins.gzip(confPlugins.gzipOptions)))
-      .pipe(sourcemaps.write('./static/assets/js/', { includeContent: false }))
-      .pipe(gulp.dest('./static/assets/js/'));
+      .pipe(sourcemaps.write('./static/js/', { includeContent: false }))
+      .pipe(gulp.dest('./static/js/'));
 });
 
 gulp.task('css', function(){	
@@ -102,7 +102,7 @@ gulp.task('css', function(){
       .pipe(plugins.sass())
       .pipe(plugins.postcss(processors))
       .pipe(gulpif(confGlobal.enableGZIP, plugins.gzip(confPlugins.gzipOptions)))
-      .pipe(gulp.dest('./static/assets/css/'));
+      .pipe(gulp.dest('./static/css/'));
 });
 
 gulp.task('css:clean', function(){
@@ -134,12 +134,12 @@ gulp.task('watch', function(){
 **************************************************************************************************** */
 
 gulp.task('copy:assets', function(){
-	return gulp.src(['./source/assets/**/*.*','!./source/assets/js/*.*','!./source/assets/css/*.*'])
-      .pipe(gulp.dest('./static/assets/'));
+	return gulp.src(['./source/**/*.*','!./source/js/*.*','!./source/css/*.*'])
+      .pipe(gulp.dest('./static/'));
 });
 
 gulp.task('copy:assets:minify', function(){
-	return gulp.src(['./source/assets/**/*.*','!./source/assets/js/*.*','!./source/assets/css/*.*'])
+	return gulp.src(['./source/**/*.*','!./source/js/*.*','!./source/css/*.*'])
       .pipe(gulpif(!confGlobal.isDevelop, plugins.imagemin({
         progressive: true,
         svgoPlugins: [{
@@ -147,7 +147,7 @@ gulp.task('copy:assets:minify', function(){
         }],
         use: [pngquant()]
       }))) // Minify only on prod
-      .pipe(gulp.dest('./static/assets/'));
+      .pipe(gulp.dest('./static/'));
 });
 
 gulp.task('clean', function(){
