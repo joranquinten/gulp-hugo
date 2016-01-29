@@ -1,0 +1,7 @@
+<nav class="nav__main">
+  {{ range $name, $taxonomy := .Site.Taxonomies.categories }}
+  <a href="/{{ $name | urlize }}/" class="nav__item">{{ title $name }}</a>
+  {{ end }}
+</nav>
+
+</header>

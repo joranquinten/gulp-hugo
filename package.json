@@ -1,16 +1,15 @@
 {
-  "name": "GulpBoilerplate",
-  "version": "1.2.0",
+  "name": "HugoGulp",
+  "version": "0.0.0",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/joranquinten/gulp-boilerplate"
+    "url": "https://bitbucket.org/joranquinten/hugo-gulp"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.1",
-    "bardjs": "^0.1.8",
-    "browser-sync": "^2.11.1",
     "cssgrace": "^3.0.0",
+    "cssnano": "^3.4.0",
     "del": "^2.2.0",
     "es6-promise": "^3.0.2",
     "gulp": "^3.9.0",
@@ -23,18 +22,15 @@
     "gulp-imagemin": "^2.4.0",
     "gulp-jshint": "^1.12.0",
     "gulp-load-plugins": "^1.2.0",
-    "gulp-minify-css": "^1.2.3",
-    "gulp-ng-annotate": "^1.1.0",
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.0.1",
     "gulp-postcss": "^6.0.1",
-    "gulp-protractor": "^1.0.0",
-    "gulp-remove-use-strict": "0.0.2",
     "gulp-rev": "^6.0.1",
     "gulp-rev-collector": "^1.0.2",
     "gulp-rev-replace": "^0.4.3",
     "gulp-sass": "^2.1.0",
     "gulp-scss-lint": "^0.3.9",
+    "gulp-shell": "^0.5.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-strip-debug": "^1.1.0",
     "gulp-uglify": "^1.5.1",
@@ -44,21 +40,10 @@
     "gulp-watch": "^4.3.5",
     "gulp-zip": "^3.1.0",
     "imagemin-pngquant": "^4.2.0",
-    "jasmine-core": "^2.3.4",
-    "jasmine-reporters": "^2.1.1",
     "jshint-stylish": "^2.1.0",
-    "karma": "^0.13.19",
-    "karma-chrome-launcher": "^0.2.1",
-    "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.3",
-    "karma-spec-reporter": "0.0.22",
-    "phantomjs": "^1.9.18",
+    "phantomjs": "^2.1.3",
     "postcss-pseudoelements": "^3.0.0",
-    "protractor": "^3.0.0",
     "run-sequence": "^1.1.4"
-  },
-  "scripts": {
-    "install": "node node_modules/protractor/bin/webdriver-manager update"
   },
   "license": "MIT"
 }

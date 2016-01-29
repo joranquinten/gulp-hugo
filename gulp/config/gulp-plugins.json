@@ -1,6 +1,6 @@
 {
   "scssLint": {
-    "config": "./config/lint-scss.yml"
+    "config": "./gulp/config/lint-scss.yml"
   },
   "autoprefixer": {
     "browsers": ["ie 8-10", "Last 2 Chrome versions"]
@@ -18,19 +18,6 @@
     "extension": "gz",
     "threshold": "1kb",
     "level": 9
-  },
-  "browserSync": {
-    "proxy": "localhost/cordys/nl-mindef-bop/apitest/portal.html",
-    "browsers": [
-      "chrome"
-    ]
-  },
-  "karma": {
-    "configFile": "\\plugins\\unit.karma.conf.js",
-    "browsers": ["PhantomJS"]
-  },
-  "protractor": {
-    "configFile": "./src/tests/e2e.protractor.conf.js"
   },
   "jshintOptions": {
     "node": true,

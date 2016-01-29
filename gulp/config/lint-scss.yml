@@ -85,11 +85,11 @@ linters:
   Indentation:
     enabled: true
     allow_non_nested_indentation: false
-    character: space # or 'tab'
-    width: 2
+    character: tab # or 'space'
+    width: 1
 
   LeadingZero:
-    enabled: true
+    enabled: false
     style: exclude_zero # or 'include_zero'
 
   MergeableSelector:

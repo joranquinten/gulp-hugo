@@ -1,0 +1,22 @@
+# Full spec @ https://gohugo.io/overview/configuration/
+baseurl = "http://joranquinten.nl/"
+languageCode = "nl-nl"
+title = "Life, Picture, Tech, Wonder"
+canonifyURLs = true
+# theme = "quinten"
+paginate = 10
+
+
+[params]
+  description = "Joran heeft een interesse in wetenschap en technologie."
+
+[author]
+  name = "Joran Quinten"
+  email = "hello@joranquinten.nl"
+  about = ""
+ 
+[social]
+  twitter = "https://twitter.com/joranquinten"
+  linkedin = "https://nl.linkedin.com/in/joranquinten"
+  github = "https://github.com/joranquinten"
+  fivehundredpx = "https://500px.com/joranquinten"

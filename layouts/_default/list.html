@@ -1,0 +1,21 @@
+{{ partial "header.html" . }}
+{{ partial "nav-main.html" . }}
+
+{{ range .Data.Pages.ByPublishDate.GroupBy "Section" }}
+<h1>{{ .Key }}</h1>
+<main>
+Laatste artikel
+</main>
+<sidebar>
+	<ul>
+		{{ range .Pages }}
+		<li>
+		<a href="{{ .Permalink }}">{{ .Title }}</a>
+		<div class="meta">{{ .Date.Format "Mon, Jan 2, 2006" }}</div>
+		</li>
+		{{ end }}
+	</ul>
+</sidebar>
+{{ end }}
+
+{{ partial "footer.html" . }}
