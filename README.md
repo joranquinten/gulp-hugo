@@ -1,4 +1,4 @@
-Hugo-gulp
+Gulp-hugo
 =======
 
 A barebones, standardized boilerplate for combining Hugo and Gulp into a single web project.
